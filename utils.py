@@ -1108,10 +1108,14 @@ def custom_error(arr: np.ndarray, **kwargs) -> np.ndarray:
     Returns
     -------
     np.ndarray
+
+    How to use
+    ----------
+    arr * custom_error(arr) and arr/custom_error(arr) gives the +-1 std interval for arr
     """
 
     # 10**(log(arr) +- sqrt(avg(abs(log(arr)-avg(log(arr)))**2)))
     # 10**(log( arr*10**sqrt(avg(abs(log(arr)-avg(log(arr)))**2)))
     # arr */ 10**sqrt(avg(abs(log(arr)-avg(log(arr)))**2)
 
-    return 10**np.sqrt(np.mean(abs(np.log10(arr, **kwargs) - log_avg(arr, **kwargs)) ** 2), **kwargs)
+    return 10**np.sqrt(np.mean(abs(np.log10(arr) - np.mean(np.log10(arr), **kwargs)) ** 2, **kwargs))

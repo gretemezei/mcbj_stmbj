@@ -977,6 +977,7 @@ class Histogram:
     """
 
     def __init__(self, folder: Path,
+                 load_from: Optional[Union[str, Path]] = None,
                  traces: Optional[Union[np.array, List[int]]] = None,
                  start_trace: int = 1,
                  end_trace: Optional[int] = None,
@@ -989,7 +990,10 @@ class Histogram:
         self.folder = folder
         if traces is None:
             self.start_trace = start_trace
-            self.end_trace = end_trace
+            if end_trace is None:
+                self.end_trace = 0
+            else:
+                self.end_trace = end_trace
             self.traces = np.arange(start=self.start_trace, stop=self.end_trace+1, step=1)
         else:
             self.traces = traces
@@ -1000,18 +1004,12 @@ class Histogram:
         self.conductance_log_scale = conductance_log_scale
         self.conductance_bins_mode = conductance_bins_mode
 
-        if self.traces is None:
-            self.bj_files = utils.choose_files(file_array=np.array(list(self.folder.glob(r'break_junction_*.h5'))),
-                                               start_block=utils.convert_to_block_and_trace_num(start_trace)[0],
-                                               end_block=utils.convert_to_block_and_trace_num(end_trace)[0])
-        else:
-            self.bj_files = None
         # Temporal histogram
         self.temporal_hist_pull = None
         self.temporal_hist_push = None
         # Trace len histogram
-        self.trace_length_pull = None
-        self.trace_length_push = None
+        # self.trace_length_pull = None
+        # self.trace_length_push = None
         # Plateau length histogram
         self.plateau_length_pull = []
         self.plateau_length_push = []
@@ -1019,10 +1017,10 @@ class Histogram:
         self.hist_plateau_length_push = None
         self.hist_plateau_length_bins = None
         #
-        self.trace_length_pull = []
-        self.trace_length_push = []
         self.time_until_hold_pull = []
         self.time_until_hold_push = []
+        self.times_until_hold_hist_pull = None
+        self.times_until_hold_hist_bins = None
         # 1D histogram
         self.hist_1d_bins = None
         self.hist_1d_pull = None
@@ -1045,46 +1043,111 @@ class Histogram:
         self.color_pull = 'cornflowerblue'
         self.color_push = 'firebrick'
 
-        self.blues = ['#000c33', '#002599', '#0032cc', '#003eff', '#406eff', '#809fff']
-        self.reds = ['#330000', '#660000', '#990000', '#cc0000', '#ff0000', '#ff4040']
-
-        self.cmap_geo32 = ListedColormap(np.array([[255 / 255, 255 / 255, 255 / 255, 1],
-                                                   [255 / 255, 235 / 255, 235 / 255, 1],
-                                                   [255 / 255, 215 / 255, 215 / 255, 1],
-                                                   [255 / 255, 196 / 255, 196 / 255, 1],
-                                                   [245 / 255, 179 / 255, 174 / 255, 1],
-                                                   [255 / 255, 158 / 255, 158 / 255, 1],
-                                                   [255 / 255, 124 / 255, 124 / 255, 1],
-                                                   [255 / 255, 90 / 255, 90 / 255, 1],
-                                                   [238 / 255, 80 / 255, 78 / 255, 1],
-                                                   [244 / 255, 117 / 255, 75 / 255, 1],
-                                                   [255 / 255, 160 / 255, 69 / 255, 1],
-                                                   [255 / 255, 189 / 255, 87 / 255, 1],
-                                                   [247 / 255, 215 / 255, 104 / 255, 1],
-                                                   [240 / 255, 236 / 255, 121 / 255, 1],
-                                                   [223 / 255, 245 / 255, 141 / 255, 1],
-                                                   [205 / 255, 255 / 255, 162 / 255, 1],
-                                                   [172 / 255, 245 / 255, 168 / 255, 1],
-                                                   [138 / 255, 236 / 255, 174 / 255, 1],
-                                                   [124 / 255, 235 / 255, 200 / 255, 1],
-                                                   [106 / 255, 235 / 255, 225 / 255, 1],
-                                                   [97 / 255, 225 / 255, 240 / 255, 1],
-                                                   [68 / 255, 202 / 255, 255 / 255, 1],
-                                                   [50 / 255, 190 / 255, 255 / 255, 1],
-                                                   [25 / 255, 175 / 255, 255 / 255, 1],
-                                                   [13 / 255, 129 / 255, 248 / 255, 1],
-                                                   [26 / 255, 102 / 255, 240 / 255, 1],
-                                                   [0 / 255, 40 / 255, 224 / 255, 1],
-                                                   [0 / 255, 25 / 255, 212 / 255, 1],
-                                                   [0 / 255, 10 / 255, 200 / 255, 1],
-                                                   [20 / 255, 5 / 255, 175 / 255, 1],
-                                                   [40 / 255, 0 / 255, 150 / 255, 1],
-                                                   [10 / 255, 0 / 255, 121 / 255, 1]]))  # colors just like in IgorPro
-
         self.all_traces = []
         self.filtered_traces = []
 
         self.collected_errors_alignment = []
+
+        if load_from is not None:
+            self.load_histogram(fname=load_from)
+    
+    def save_histogram(self, fname: Union[str, Path]):
+        with h5py.File(fname, 'w') as f:
+            # f.create_dataset('all_traces', self.all_traces)
+            # f.create_dataset('filtered_traces', self.filtered_traces)
+            traces_dset = f.create_dataset('traces', data=self.traces)
+            traces_dset.attrs['folder'] = str(self.folder)
+
+            if self.hist_1d_bins is not None:
+                hist_1d_dset = f.create_dataset('hist_1d_bins', data=self.hist_1d_bins)
+                hist_1d_dset.attrs['conductance_bins_mode'] = self.conductance_bins_mode
+                hist_1d_dset.attrs['conductance_bins_num'] = self.conductance_bins_num
+                hist_1d_dset.attrs['conductance_log_scale'] = self.conductance_log_scale
+                hist_1d_dset.attrs['conductance_range'] = self.conductance_range
+                f.create_dataset('hist_1d_pull', data=self.hist_1d_pull)
+                f.create_dataset('hist_1d_push', data=self.hist_1d_push)
+
+            if self.hist_2d_pull is not None:
+                f.create_dataset('hist_2d_pull', data=self.hist_2d_pull)
+                f.create_dataset('hist_2d_xmesh_pull', data=self.hist_2d_xmesh_pull)
+                f.create_dataset('hist_2d_ymesh_pull', data=self.hist_2d_ymesh_pull)
+                f.create_dataset('hist_2d_push', data=self.hist_2d_push)
+                f.create_dataset('hist_2d_xmesh_push', data=self.hist_2d_xmesh_push)
+                f.create_dataset('hist_2d_ymesh_push', data=self.hist_2d_ymesh_push)
+
+            if self.corr_2d_pull is not None:
+                f.create_dataset('corr_2d_pull', data=self.corr_2d_pull)
+                f.create_dataset('corr_2d_push', data=self.corr_2d_push)
+                f.create_dataset('cross_corr_2d', data=self.cross_corr_2d)
+
+            if self.temporal_hist_pull is not None:
+                f.create_dataset('temporal_hist_pull', data=self.temporal_hist_pull)
+                f.create_dataset('temporal_hist_push', data=self.temporal_hist_push)
+
+            if self.hist_plateau_length_bins is not None:
+                f.create_dataset('hist_plateau_length_bins', data=self.hist_plateau_length_bins)
+                f.create_dataset('hist_plateau_length_pull', data=self.hist_plateau_length_pull)
+                f.create_dataset('hist_plateau_length_push', data=self.hist_plateau_length_push)
+
+            if self.plateau_length_pull is not None:
+                f.create_dataset('plateau_length_pull', data=self.plateau_length_pull)
+                f.create_dataset('plateau_length_push', data=self.plateau_length_push)
+
+            if self.times_until_hold_hist_bins is not None:
+                f.create_dataset('time_until_hold_pull', data=self.time_until_hold_pull)
+                f.create_dataset('time_until_hold_push', data=self.time_until_hold_push)
+                f.create_dataset('times_until_hold_hist_bins', data=self.times_until_hold_hist_bins)
+                f.create_dataset('times_until_hold_hist_pull', data=self.times_until_hold_hist_pull)
+
+        print(f'Data saved to {fname}.')
+
+    def load_histogram(self, fname: Union[str, Path]):
+        with h5py.File(fname, 'r') as f:
+            file_keys = f.keys()
+
+            self.folder = Path(f['traces'].attrs['folder'])
+            self.traces = f['traces'][:]
+
+            if 'hist_1d_bins' in file_keys:
+                self.hist_1d_bins = f['hist_1d_bins'][:]
+                self.conductance_bins_mode = f['hist_1d_bins'].attrs['conductance_bins_mode']
+                self.conductance_bins_num = f['hist_1d_bins'].attrs['conductance_bins_num']
+                self.conductance_log_scale = f['hist_1d_bins'].attrs['conductance_log_scale']
+                self.conductance_range = f['hist_1d_bins'].attrs['conductance_range']
+                self.hist_1d_pull = f['hist_1d_pull'][:]
+                self.hist_1d_push = f['hist_1d_push'][:]
+
+            if 'hist_2d_pull' in file_keys:
+                self.hist_2d_pull = f['hist_1d_pull'][:]
+                self.hist_2d_xmesh_pull = f['hist_2d_xmesh_pull'][:]
+                self.hist_2d_ymesh_pull = f['hist_2d_ymesh_pull'][:]
+                self.hist_2d_pull = f['hist_1d_push'][:]
+                self.hist_2d_xmesh_push = f['hist_2d_xmesh_push'][:]
+                self.hist_2d_ymesh_push = f['hist_2d_ymesh_push'][:]
+
+            if 'corr_2d_pull' in file_keys:
+                self.corr_2d_pull = f['corr_2d_pull'][:]
+                self.corr_2d_push = f['corr_2d_push'][:]
+                self.cross_corr_2d = f['cross_corr_2d'][:]
+
+            if 'temporal_hist_pull' in file_keys:
+                self.temporal_hist_pull = f['temporal_hist_pull'][:]
+                self.temporal_hist_push =f['temporal_hist_push'][:]
+
+            if self.hist_plateau_length_bins is not None:
+                self.hist_plateau_length_bins = f['hist_plateau_length_bins'][:]
+                self.hist_plateau_length_pull = f['hist_plateau_length_pull'][:]
+                self.hist_plateau_length_push = f['hist_plateau_length_push'][:]
+
+            if self.plateau_length_pull is not None:
+                self.plateau_length_pull = f['plateau_length_pull'][:]
+                self.plateau_length_push = f['plateau_length_push'][:]
+
+            if self.times_until_hold_hist_bins is not None:
+                self.time_until_hold_pull = f['time_until_hold_pull'][:]
+                self.time_until_hold_push = f['time_until_hold_push'][:]
+                self.times_until_hold_hist_bins = f['times_until_hold_hist_bins'][:]
+                self.times_until_hold_hist_pull = f['times_until_hold_hist_pull'][:]
 
     def calc_temporal_hist(self):
         """
@@ -1102,28 +1165,6 @@ class Histogram:
         trace_len_pull = []
         trace_len_push = []
 
-        # if self.traces is None:
-        #     for file in tqdm(self.bj_files, desc="Calculating temporal histograms"):
-        #         with h5py.File(file, "r") as input_file:
-        #             for trace in utils.choose_traces(trace_array=np.array(list(input_file['pull'].keys())),
-        #                                              first=self.start_trace, last=self.end_trace):
-        #                 trace_pair = TracePair(trace=trace, load_from=input_file)
-        #                 hist_bins, single_hist_1d = utils.calc_hist_1d_single(trace_pair.conductance_pull,
-        #                                                                       xrange=self.conductance_range,
-        #                                                                       xbins_num=self.conductance_bins,
-        #                                                                       log_scale=self.conductance_log_scale)
-        #
-        #                 single_hist_list_pull.append(single_hist_1d)
-        #                 trace_len_pull.append(trace_pair.conductance_pull.shape[0])
-        #
-        #                 hist_bins, single_hist_1d = utils.calc_hist_1d_single(trace_pair.conductance_push,
-        #                                                                       xrange=self.conductance_range,
-        #                                                                       xbins_num=self.conductance_bins,
-        #                                                                       log_scale=self.conductance_log_scale)
-        #
-        #                 single_hist_list_push.append(single_hist_1d)
-        #                 trace_len_push.append(trace_pair.conductance_push.shape[0])
-        # else:
         for trace in self.traces:
             trace_pair = TracePair(trace=trace, load_from=self.folder)
             hist_bins, single_hist_1d = utils.calc_hist_1d_single(trace_pair.conductance_pull,
@@ -1227,7 +1268,7 @@ class Histogram:
         x_mesh, y_mesh = np.meshgrid(x_edges, y_edges)
 
         if 'cmap' not in kwargs.keys():
-            kwargs['cmap'] = self.cmap_geo32
+            kwargs['cmap'] = utils.cmap_geo32
 
         im_norm_pull = ax_pull.pcolormesh(x_mesh, y_mesh, self.temporal_hist_pull.T,
                                           vmin=vmin_pull, vmax=vmax_pull, **kwargs)
@@ -1265,35 +1306,6 @@ class Histogram:
             self.hist_1d_pull = np.mean(self.temporal_hist_pull, axis=0)
             self.hist_1d_push = np.mean(self.temporal_hist_push, axis=0)
         else:
-            # need to iterate over all traces, calculate the single histogram for each trace and then sum them up
-            # if self.traces is None:
-            #     for file in tqdm(self.bj_files, desc="Calculating 1D conductance histograms"):
-            #         with h5py.File(file, "r") as input_file:
-            #             for trace in utils.choose_traces(trace_array=np.array(list(input_file['pull'].keys())),
-            #                                              first=self.start_trace, last=self.end_trace):
-            #                 trace_pair = TracePair(trace=trace, load_from=input_file)
-            #                 hist_bins, single_hist_1d = utils.calc_hist_1d_single(trace_pair.conductance_pull,
-            #                                                                       xrange=self.conductance_range,
-            #                                                                       xbins_num=self.conductance_bins,
-            #                                                                       log_scale=self.conductance_log_scale)
-            #
-            #                 try:
-            #                     self.hist_1d_pull = self.hist_1d_pull + single_hist_1d / (
-            #                                 self.end_trace - self.start_trace)
-            #                 except (ValueError, TypeError):
-            #                     self.hist_1d_pull = single_hist_1d / (self.end_trace - self.start_trace)
-            #
-            #                 hist_bins, single_hist_1d = utils.calc_hist_1d_single(trace_pair.conductance_push,
-            #                                                                       xrange=self.conductance_range,
-            #                                                                       xbins_num=self.conductance_bins,
-            #                                                                       log_scale=self.conductance_log_scale)
-            #
-            #                 try:
-            #                     self.hist_1d_push = self.hist_1d_push + single_hist_1d / (
-            #                                 self.end_trace - self.start_trace)
-            #                 except (ValueError, TypeError):
-            #                     self.hist_1d_push = single_hist_1d / (self.end_trace - self.start_trace)
-            # else:
             for trace in tqdm(self.traces):
                 trace_pair = TracePair(trace=trace, load_from=self.folder)
                 hist_bins, single_hist_1d = utils.calc_hist_1d_single(trace_pair.conductance_pull,
@@ -1428,56 +1440,6 @@ class Histogram:
         count_pull = 0
         count_push = 0
 
-        # if self.traces is None:
-        #     for file in tqdm(self.bj_files, desc="Calculating 2D conductance-displacement histograms"):
-        #         with h5py.File(file, "r") as input_file:
-        #             for trace in utils.choose_traces(trace_array=np.array(list(input_file['pull'].keys())),
-        #                                              first=self.start_trace, last=self.end_trace):
-        #
-        #                 trace_pair = TracePair(trace=trace, load_from=input_file)
-        #                 trace_pair.align_trace(align_at=self.align_at, interpolate=interpolate)
-        #
-        #                 try:
-        #                     x_mesh_pull, y_mesh_pull, single_hist_2d = \
-        #                         utils.calc_hist_2d_single(x=trace_pair.aligned_piezo_pull,
-        #                                                   y=trace_pair.conductance_pull,
-        #                                                   xrange=range_pull,
-        #                                                   log_scale_x=False,
-        #                                                   yrange=(1e-6, 10),
-        #                                                   log_scale_y=True,
-        #                                                   num_bins=(xbins_pull, 100))
-        #
-        #                     try:
-        #                         self.hist_2d_pull = self.hist_2d_pull + single_hist_2d
-        #                     except (ValueError, TypeError):
-        #                         self.hist_2d_pull = single_hist_2d
-        #
-        #                     count_pull += 1
-        #
-        #                 except utils.MyException:
-        #                     pass
-        #
-        #                 try:
-        #                     x_mesh_push, y_mesh_push, single_hist_2d = utils.calc_hist_2d_single(
-        #                         x=trace_pair.aligned_piezo_push[::-1],
-        #                         y=trace_pair.conductance_push[::-1],
-        #                         xrange=range_push,
-        #                         log_scale_x=False,
-        #                         yrange=(1e-6, 10),
-        #                         log_scale_y=True,
-        #                         num_bins=(xbins_push, 100))
-        #
-        #                     try:
-        #                         self.hist_2d_push = self.hist_2d_push + single_hist_2d
-        #                     except (ValueError, TypeError):
-        #                         self.hist_2d_push = single_hist_2d
-        #
-        #                     count_push += 1
-        #
-        #                 except utils.MyException:
-        #                     pass
-        #
-        # else:
         for trace in tqdm(self.traces):
             trace_pair = TracePair(trace=trace, load_from=self.folder)
             trace_pair.align_trace(align_at=self.align_at, interpolate=interpolate)
@@ -1581,7 +1543,7 @@ class Histogram:
         ax.yaxis.set_major_locator(ticker.LogLocator(base=10.0, subs=(1.0,), numticks=9))
         ax.yaxis.set_minor_locator(ticker.LogLocator(base=10.0, subs=np.arange(0, 1, 0.1), numticks=9))
         ax.yaxis.set_minor_formatter(ticker.NullFormatter())
-        im_norm = ax.pcolormesh(x_mesh, y_mesh, hist_2d, cmap=self.cmap_geo32, **kwargs)
+        im_norm = ax.pcolormesh(x_mesh, y_mesh, hist_2d, cmap=utils.cmap_geo32, **kwargs)
 
         return ax
 
@@ -1706,17 +1668,6 @@ class Histogram:
         plateau_length_pull = []
         plateau_length_push = []
 
-        # if self.traces is None:
-        #     for file in tqdm(self.bj_files, desc="Calculating plateau length histogram"):
-        #         with h5py.File(file, "r") as input_file:
-        #             for trace in utils.choose_traces(trace_array=np.array(list(input_file['pull'].keys())),
-        #                                              first=self.start_trace, last=self.end_trace):
-        #                 trace_pair = TracePair(trace=trace, load_from=input_file,
-        #                                        low_bound_pull=low_bound_pull, high_bound_pull=high_bound_pull,
-        #                                        low_bound_push=low_bound_push, high_bound_push=high_bound_push)
-        #                 plateau_length_pull.append(trace_pair.plateau_length_pull)
-        #                 plateau_length_push.append(trace_pair.plateau_length_push)
-        # else:
         for trace in self.traces:
             trace_pair = TracePair(trace=trace, load_from=self.folder,
                                    low_bound_pull=low_bound_pull, high_bound_pull=high_bound_pull,
@@ -1747,16 +1698,6 @@ class Histogram:
         plateau_length_push = []
 
         if self.plateau_length_pull is None or self.plateau_length_push is None:
-
-            # if self.traces is None:
-            #     for file in tqdm(self.bj_files, desc="Calculating plateau length histogram"):
-            #         with h5py.Fil0e(file, "r") as input_file:
-            #             for trace in utils.choose_traces(trace_array=np.array(list(input_file['pull'].keys())),
-            #                                              first=self.start_trace, last=self.end_trace):
-            #                 trace_pair = TracePair(trace=trace, load_from=input_file)
-            #                 plateau_length_pull.append(trace_pair.plateau_length_pull)
-            #                 plateau_length_push.append(trace_pair.plateau_length_push)
-            # else:
             for trace in tqdm(self.traces):
                 trace_pair = TracePair(trace=trace, load_from=self.folder)
                 plateau_length_pull.append(trace_pair.plateau_length_pull)
@@ -1852,22 +1793,6 @@ class Histogram:
         pull_times = []
         push_times = []
 
-        # if self.traces is None:
-        #     for file in tqdm(self.bj_files, desc="Calculating histogram of time passed between the rupture of 1G0"
-        #                                          "configuration and hold measurement"):
-        #         with h5py.File(file, "r") as input_file:
-        #             for trace in utils.choose_traces(trace_array=np.array(list(input_file['pull'].keys())),
-        #                                              first=self.start_trace, last=self.end_trace):
-        #                 trace_pair = TracePair(trace=trace, load_from=input_file)
-        #
-        #                 try:
-        #                     pull_times.append((trace_pair.hold_index_pull - trace_pair.plateau_range_pull[1])
-        #                                       / trace_pair.sample_rate)
-        #                     # push_times.append((trace_pair.plateau_range_push[0] - trace_pair.hold_index_push)
-        #                     #                   / trace_pair.sample_rate)
-        #                 except TypeError:
-        #                     continue
-        # else:
         for trace in tqdm(self.traces):
             trace_pair = TracePair(trace=trace, load_from=self.folder)
 
@@ -1979,83 +1904,6 @@ class Histogram:
 
         count_pull = 0
         count_push = 0
-
-        # if self.traces is None:
-        #     for file in tqdm(self.bj_files, desc="Processing break junction files"):
-        #         with h5py.File(file, "r") as input_file:
-        #             for trace in utils.choose_traces(trace_array=np.array(list(input_file['pull'].keys())),
-        #                                              first=self.start_trace, last=self.end_trace):
-        #                 # define TracePair instance
-        #                 trace_pair = TracePair(trace=trace, load_from=input_file)
-        #                 # Collect plateau length to create histogram
-        #                 plateau_length_pull.append(trace_pair.plateau_length_pull)
-        #                 plateau_length_push.append(trace_pair.plateau_length_push)
-        #                 # Calculate and collect single 1d histograms
-        #                 # pull
-        #                 hist_bins, single_hist_1d = utils.calc_hist_1d_single(trace_pair.conductance_pull,
-        #                                                                       xrange=self.conductance_range,
-        #                                                                       xbins_num=self.conductance_bins,
-        #                                                                       log_scale=self.conductance_log_scale)
-        #
-        #                 single_hist_list_pull.append(single_hist_1d)
-        #                 trace_len_pull.append(trace_pair.conductance_pull.shape[0])
-        #                 # push
-        #                 hist_bins, single_hist_1d = utils.calc_hist_1d_single(trace_pair.conductance_push,
-        #                                                                       xrange=self.conductance_range,
-        #                                                                       xbins_num=self.conductance_bins,
-        #                                                                       log_scale=self.conductance_log_scale)
-        #
-        #                 single_hist_list_push.append(single_hist_1d)
-        #                 trace_len_push.append(trace_pair.conductance_push.shape[0])
-        #                 # Calculate and sum 2d single histograms
-        #                 # pull
-        #                 try:
-        #                     trace_pair.align_trace(align_at=align_at, interpolate=interpolate)
-        #                     try:
-        #                         x_mesh_pull, y_mesh_pull, single_hist_2d = utils.calc_hist_2d_single(
-        #                             x=trace_pair.aligned_piezo_pull,
-        #                             y=trace_pair.conductance_pull,
-        #                             xrange=range_pull,
-        #                             log_scale_x=False,
-        #                             yrange=(1e-6, 10),
-        #                             log_scale_y=True,
-        #                             num_bins=(xbins_pull, 100))
-        #
-        #                         try:
-        #                             self.hist_2d_pull = self.hist_2d_pull + single_hist_2d
-        #                         except (ValueError, TypeError):
-        #                             self.hist_2d_pull = single_hist_2d
-        #
-        #                         count_pull += 1
-        #
-        #                     except utils.MyException:
-        #                         pass
-        #                     # push
-        #                     try:
-        #                         x_mesh_push, y_mesh_push, single_hist_2d = utils.calc_hist_2d_single(
-        #                             x=trace_pair.aligned_piezo_push[::-1],
-        #                             y=trace_pair.conductance_push[::-1],
-        #                             xrange=range_push,
-        #                             log_scale_x=False,
-        #                             yrange=(1e-6, 10),
-        #                             log_scale_y=True,
-        #                             num_bins=(xbins_push, 100))
-        #
-        #                         try:
-        #                             self.hist_2d_push = self.hist_2d_push + single_hist_2d
-        #                         except (ValueError, TypeError):
-        #                             self.hist_2d_push = single_hist_2d
-        #
-        #                         count_push += 1
-        #
-        #                     except utils.MyException:
-        #                         pass
-        #                 except IndexError:
-        #                     warnings.warn(f'Trace did not cross align value {align_at}. '
-        #                                   f'Skipping trace pair {trace_pair.trace_num}')
-        #                     pass
-        #
-        # else:
 
         self.collected_errors_alignment = []
 
@@ -2317,7 +2165,6 @@ class HoldTrace:
                  r_serial_ohm: int = 100_000, sample_rate: int = 50_000,
                  min_step_len: Optional[Union[int, None]] = None, min_height: int = 100, iv: Optional[int] = None,
                  gain: float = 1e7):
-        # self.bj_files = utils.choose_files(np.array(list(load_from.glob(r'break_junction_*.h5'))))
 
         self.bias_offset = bias_offset
         self.R_ser = r_serial_ohm
@@ -3723,43 +3570,6 @@ class NoiseStats:
         self.f0 = 1  # constant
         self.bias_steps_ranges = np.array([])
 
-        # for plots
-        self.blues = ['#000c33', '#002599', '#0032cc', '#003eff', '#406eff', '#809fff']
-        self.reds = ['#330000', '#660000', '#990000', '#cc0000', '#ff0000', '#ff4040']
-
-        self.cmap_geo32 = ListedColormap(np.array([[255 / 255, 255 / 255, 255 / 255, 1],
-                                                   [255 / 255, 235 / 255, 235 / 255, 1],
-                                                   [255 / 255, 215 / 255, 215 / 255, 1],
-                                                   [255 / 255, 196 / 255, 196 / 255, 1],
-                                                   [245 / 255, 179 / 255, 174 / 255, 1],
-                                                   [255 / 255, 158 / 255, 158 / 255, 1],
-                                                   [255 / 255, 124 / 255, 124 / 255, 1],
-                                                   [255 / 255, 90 / 255, 90 / 255, 1],
-                                                   [238 / 255, 80 / 255, 78 / 255, 1],
-                                                   [244 / 255, 117 / 255, 75 / 255, 1],
-                                                   [255 / 255, 160 / 255, 69 / 255, 1],
-                                                   [255 / 255, 189 / 255, 87 / 255, 1],
-                                                   [247 / 255, 215 / 255, 104 / 255, 1],
-                                                   [240 / 255, 236 / 255, 121 / 255, 1],
-                                                   [223 / 255, 245 / 255, 141 / 255, 1],
-                                                   [205 / 255, 255 / 255, 162 / 255, 1],
-                                                   [172 / 255, 245 / 255, 168 / 255, 1],
-                                                   [138 / 255, 236 / 255, 174 / 255, 1],
-                                                   [124 / 255, 235 / 255, 200 / 255, 1],
-                                                   [106 / 255, 235 / 255, 225 / 255, 1],
-                                                   [97 / 255, 225 / 255, 240 / 255, 1],
-                                                   [68 / 255, 202 / 255, 255 / 255, 1],
-                                                   [50 / 255, 190 / 255, 255 / 255, 1],
-                                                   [25 / 255, 175 / 255, 255 / 255, 1],
-                                                   [13 / 255, 129 / 255, 248 / 255, 1],
-                                                   [26 / 255, 102 / 255, 240 / 255, 1],
-                                                   [0 / 255, 40 / 255, 224 / 255, 1],
-                                                   [0 / 255, 25 / 255, 212 / 255, 1],
-                                                   [0 / 255, 10 / 255, 200 / 255, 1],
-                                                   [20 / 255, 5 / 255, 175 / 255, 1],
-                                                   [40 / 255, 0 / 255, 150 / 255, 1],
-                                                   [10 / 255, 0 / 255, 121 / 255, 1]]))
-
         self.G_set_pull = []
         self.G_set_push = []
         self.G_stop_pull = []
@@ -4455,7 +4265,7 @@ class NoiseStats:
                 ax = self.scatterplot(x_pull[set_arr_pull == set_vals_pull[i]],
                                       y_pull[set_arr_pull == set_vals_pull[i]],
                                       ax_xlabel=r'$G_\mathrm{set} [G_{0}]$', ax_ylabel=r'$G_\mathrm{stop} [G_{0}]$',
-                                      ax=ax, c=self.blues[i], alpha=0.5, s=1)
+                                      ax=ax, c=utils.blues[i], alpha=0.5, s=1)
 
                 binsx, hist = utils.calc_hist_1d_single(x_pull[set_arr_pull == set_vals_pull[i]],
                                                         xrange=(1e-5, 1e-1), xbins_num=100, log_scale=True)
@@ -4465,8 +4275,8 @@ class NoiseStats:
                                                         xrange=(1e-5, 1e-1), xbins_num=100, log_scale=True)
                 histy_pull.append(hist)
 
-                ax_histx.plot(binsx, histx_pull[-1], c=self.blues[i], lw=0.6, alpha=0.7)
-                ax_histy.plot(histy_pull[-1], binsy, c=self.blues[i], lw=0.6, alpha=0.7)
+                ax_histx.plot(binsx, histx_pull[-1], c=utils.blues[i], lw=0.6, alpha=0.7)
+                ax_histy.plot(histy_pull[-1], binsy, c=utils.blues[i], lw=0.6, alpha=0.7)
 
             histx_pull = np.array(histx_pull)
             histy_pull = np.array(histy_pull)
@@ -4483,7 +4293,7 @@ class NoiseStats:
                 ax = self.scatterplot(x_push[set_arr_push == set_vals_push[i]],
                                       y_push[set_arr_push == set_vals_push[i]],
                                       ax_xlabel=r'$G_\mathrm{set} [G_{0}]$', ax_ylabel=r'$G_\mathrm{stop} [G_{0}]$',
-                                      ax=ax, c=self.reds[i], alpha=0.5, s=1)
+                                      ax=ax, c=utils.reds[i], alpha=0.5, s=1)
 
                 binsx, hist = utils.calc_hist_1d_single(x_push[set_arr_push == set_vals_push[i]],
                                                         xrange=(1e-5, 1e-1), xbins_num=100, log_scale=True)
@@ -4493,8 +4303,8 @@ class NoiseStats:
                                                         xrange=(1e-5, 1e-1), xbins_num=100, log_scale=True)
                 histy_push.append(hist)
 
-                ax_histx.plot(binsx, histx_push[-1], c=self.reds[i], lw=0.6, alpha=0.7)
-                ax_histy.plot(histy_push[-1], binsy, c=self.reds[i], lw=0.6, alpha=0.7)
+                ax_histx.plot(binsx, histx_push[-1], c=utils.reds[i], lw=0.6, alpha=0.7)
+                ax_histy.plot(histy_push[-1], binsy, c=utils.reds[i], lw=0.6, alpha=0.7)
 
             histx_push = np.array(histx_push)
             histy_push = np.array(histy_push)
@@ -4611,6 +4421,6 @@ class NoiseStats:
         ax.text(x=0.85, y=0.15, s=f"n = {np.round(n, 2)}",
                 transform=ax.transAxes, fontsize='xx-small', ha='right', va='bottom')
 
-        im = ax.pcolormesh(x_mesh, y_mesh, h.T, cmap=self.cmap_geo32)
+        im = ax.pcolormesh(x_mesh, y_mesh, h.T, cmap=utils.cmap_geo32)
 
         return ax

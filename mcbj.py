@@ -1057,7 +1057,7 @@ class Histogram:
                 mkdir(self.folder.joinpath('results'))
             if not self.folder.joinpath('results/histograms').exists():
                 mkdir(self.folder.joinpath('results/histograms'))
-            fname = self.folder.joinpath('results/histograms')
+            fname = self.folder.joinpath(f'results/histograms/{fname}')
         with h5py.File(fname, 'w') as f:
             # f.create_dataset('all_traces', self.all_traces)
             # f.create_dataset('filtered_traces', self.filtered_traces)
@@ -1105,7 +1105,7 @@ class Histogram:
                 f.create_dataset('times_until_hold_hist_bins', data=self.times_until_hold_hist_bins)
                 f.create_dataset('times_until_hold_hist_pull', data=self.times_until_hold_hist_pull)
 
-        print(f'Data saved to {fname}.')
+        print(f'Histogram saved to {fname}.')
 
     def load_histogram(self, fname: Union[str, Path]):
         if isinstance(fname, str):

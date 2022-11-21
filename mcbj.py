@@ -1108,6 +1108,8 @@ class Histogram:
         print(f'Data saved to {fname}.')
 
     def load_histogram(self, fname: Union[str, Path]):
+        if isinstance(fname, str):
+            fname = self.folder.joinpath(f'results/histograms/{fname}')
         with h5py.File(fname, 'r') as f:
             file_keys = f.keys()
 

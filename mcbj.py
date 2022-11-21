@@ -1052,6 +1052,12 @@ class Histogram:
             self.load_histogram(fname=load_from)
     
     def save_histogram(self, fname: Union[str, Path]):
+        if isinstance(fname, str):
+            if not self.folder.joinpath('results').exists():
+                mkdir(self.folder.joinpath('results'))
+            if not self.folder.joinpath('results/histograms').exists():
+                mkdir(self.folder.joinpath('results/histograms'))
+            fname = self.folder.joinpath('results/histograms')
         with h5py.File(fname, 'w') as f:
             # f.create_dataset('all_traces', self.all_traces)
             # f.create_dataset('filtered_traces', self.filtered_traces)

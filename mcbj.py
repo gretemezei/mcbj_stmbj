@@ -1077,6 +1077,7 @@ class Histogram:
                 f.create_dataset('hist_2d_pull', data=self.hist_2d_pull)
                 f.create_dataset('hist_2d_xmesh_pull', data=self.hist_2d_xmesh_pull)
                 f.create_dataset('hist_2d_ymesh_pull', data=self.hist_2d_ymesh_pull)
+            if self.hist_2d_push is not None:
                 f.create_dataset('hist_2d_push', data=self.hist_2d_push)
                 f.create_dataset('hist_2d_xmesh_push', data=self.hist_2d_xmesh_push)
                 f.create_dataset('hist_2d_ymesh_push', data=self.hist_2d_ymesh_push)
@@ -1129,7 +1130,8 @@ class Histogram:
                 self.hist_2d_pull = f['hist_1d_pull'][:]
                 self.hist_2d_xmesh_pull = f['hist_2d_xmesh_pull'][:]
                 self.hist_2d_ymesh_pull = f['hist_2d_ymesh_pull'][:]
-                self.hist_2d_pull = f['hist_1d_push'][:]
+            if 'hist_2d_push' in file_keys:
+                self.hist_2d_push = f['hist_1d_push'][:]
                 self.hist_2d_xmesh_push = f['hist_2d_xmesh_push'][:]
                 self.hist_2d_ymesh_push = f['hist_2d_ymesh_push'][:]
 

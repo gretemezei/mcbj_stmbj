@@ -393,13 +393,27 @@ class PCA:
 
         return ax
 
-    def calc_group_histograms(self):
+    def calc_group_histograms(self,
+                              conductance_range: Optional[Tuple[float, float]] = None,
+                              conductance_bins_num: Optional[int] = None,
+                              conductance_log_scale: Optional[bool] = None,
+                              conductance_bins_mode: Optional[str] = None):
+
+        if conductance_range is None:
+            conductance_range = self.hist.conductance_range
+        if conductance_bins_num is None:
+            conductance_bins_num = self.hist.conductance_bins_num
+        if conductance_log_scale is None:
+            conductance_log_scale = self.hist.conductance_log_scale
+        if conductance_bins_mode is None:
+            conductance_bins_mode = self.hist.conductance_bins_mode
+
         for pc_key in self.pc_keys:
             hist_group1 = Histogram(folder=self.hist.folder, traces=self.traces_group1[pc_key],
-                                    conductance_range=self.hist.conductance_range,
-                                    conductance_bins_num=self.hist.conductance_bins_num,
-                                    conductance_log_scale=self.hist.conductance_log_scale,
-                                    conductance_bins_mode=self.hist.conductance_bins_mode)
+                                    conductance_range=conductance_range,
+                                    conductance_bins_num=conductance_bins_num,
+                                    conductance_log_scale=conductance_log_scale,
+                                    conductance_bins_mode=conductance_bins_mode)
             print(f'Calculating 1D and 2D histograms of {pc_key} group1.')
             hist_group1.calc_hist_1d()
             hist_group1.calc_hist_2d(align_at=self.hist.align_at,

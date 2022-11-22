@@ -164,22 +164,22 @@ class PCA:
                     self.principal_components[pc_key] = f[pc_key]['principal_component'][:]
                     self.pc_vals[pc_key] = f[pc_key]['principal_component'].attrs['pc_val']
                     # Projection to PCs
-                    self.dot_prod[pc_key] = f[pc_key]['dot_prod']
+                    self.dot_prod[pc_key] = f[pc_key]['dot_prod'][:]
 
                     # PC histogram
-                    self.pc_hist_bins[pc_key] = f[pc_key]['pc_hist_bins']
-                    self.pc_hist_1d[pc_key] = f[pc_key]['pc_hist_1d']
+                    self.pc_hist_bins[pc_key] = f[pc_key]['pc_hist_bins'][:]
+                    self.pc_hist_1d[pc_key] = f[pc_key]['pc_hist_1d'][:]
 
                     # Selected traces, their projections to the PCs, the histograms of the dot products
-                    self.traces_group1[pc_key] = f[pc_key]['traces_group1']
+                    self.traces_group1[pc_key] = f[pc_key]['traces_group1'][:]
                     self.selected_amount = f[pc_key]['traces_group1'].attrs['selected_amount']
-                    self.dot_prod_group1[pc_key] = f[pc_key]['dot_prod_group1']
-                    self.pc_hist_bins_group1[pc_key] = f[pc_key]['pc_hist_bins_group1']
-                    self.pc_hist_1d_group1[pc_key] = f[pc_key]['pc_hist_1d_group1']
-                    self.traces_group2[pc_key] = f[pc_key]['traces_group2']
-                    self.dot_prod_group2[pc_key] = f[pc_key]['dot_prod_group2']
-                    self.pc_hist_bins_group2[pc_key] = f[pc_key]['pc_hist_bins_group2']
-                    self.pc_hist_1d_group2[pc_key] = f[pc_key]['pc_hist_1d_group2']
+                    self.dot_prod_group1[pc_key] = f[pc_key]['dot_prod_group1'][:]
+                    self.pc_hist_bins_group1[pc_key] = f[pc_key]['pc_hist_bins_group1'][:]
+                    self.pc_hist_1d_group1[pc_key] = f[pc_key]['pc_hist_1d_group1'][:]
+                    self.traces_group2[pc_key] = f[pc_key]['traces_group2'][:]
+                    self.dot_prod_group2[pc_key] = f[pc_key]['dot_prod_group2'][:]
+                    self.pc_hist_bins_group2[pc_key] = f[pc_key]['pc_hist_bins_group2'][:]
+                    self.pc_hist_1d_group2[pc_key] = f[pc_key]['pc_hist_1d_group2'][:]
 
                 self.num_of_bins = tuple(self.pc_hist_bins[pc_key].shape[0] for pc_key in self.pc_keys)
                 self.hist_min = tuple(min(self.pc_hist_bins[pc_key]) for pc_key in self.pc_keys)

@@ -1,6 +1,8 @@
+from os import mkdir
 from pathlib import Path
 from typing import Union, Tuple, List, Optional
 
+import h5py
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm, colormaps, cycler, rcParams, gridspec, ticker
@@ -12,20 +14,38 @@ import utils
 
 
 class PCA:
-    def __init__(self, hist: Histogram, num_of_pcs: int = 5, color_map=None):
+    def __init__(self, hist: Optional[Union[Histogram, str, Path]] = None, num_of_pcs: int = 5, color_map=None,
+                 load_from: Optional[Union[str, Path]] = None, load_trace_hists: bool = False,
+                 folder: Optional[Union[str, Path]] = None):
         """
 
         Parameters
         ----------
-        hist : Histogram
-            Histogram instance where the correlation is calculated
+        hist : Histogram, st or Path
+            if Histogram: Histogram instance where the correlation is calculated
+            if str or Path: path to load histogram from
         num_of_pcs : int, default: 5
             number of principal components to calculate and analyze
+        color_map : cycler, list of colors
+            colors to use for plot
+        load_from :
+        load_trace_hists :
+        folder : str or Path
+            if hist is a str or Path, you need to provide the path to the folder containing the traces too
+
         """
 
-        self.hist = hist
+        if hist is None and load_from is None:
+            raise ValueError('You must provide at least on of the parameters `hist` or `load_from`, '
+                             'both of them cannot be None')
+
+        if isinstance(hist, Histogram):
+            self.hist = hist
+        elif isinstance(hist, (str, Path)):
+            self.hist = Histogram(folder=folder, load_from=hist)
+
         self.num_of_pcs = num_of_pcs
-        self.pc_keys = tuple(f'PC{i+1}' for i in range(self.num_of_pcs))
+        self.pc_keys = tuple(f'PC{i + 1}' for i in range(self.num_of_pcs))
 
         if color_map is None:
             self.color_map = colormaps['tab10'](np.linspace(0, 1, 10))  # max 10 different colors
@@ -46,6 +66,7 @@ class PCA:
         self.pc_hist_1d = {}
 
         # Selected traces, their projections to the PCs, the histograms of the dot products
+        self.selected_amount = 0
         self.traces_group1 = {}
         self.dot_prod_group1 = {}
         self.pc_hist_bins_group1 = {}
@@ -59,17 +80,131 @@ class PCA:
         self.hist_group1 = {}
         self.hist_group2 = {}
 
-    def load_principal_components(self, source_file: Union[Path, str], source_type: str = 'igor'):
-        if source_type == 'igor':
-            loaded_pc = np.loadtxt(source_file, skiprows=1)
+        if isinstance(load_from, (str, Path)):
+            self.load_principal_components(fname=load_from, source_type='h5py', load_trace_hists=load_trace_hists)
+        elif load_from is None:
+            ...
         else:
-            raise NotImplementedError('Source type only accepts "igor" as input, other types are not implemented yet.')
+            raise ValueError(f'Unrecognized value {load_from} for parameter load_from.')
 
-        self.num_of_pcs = loaded_pc.shape[1]
-        self.pc_keys = tuple(f'PC{i+1}' for i in range(self.num_of_pcs))
+    def save_principal_components(self, fname: Union[str, Path], save_trace_hists: bool = False):
+        if isinstance(fname, str):
+            results_folder = self.hist.folder.joinpath('results/')
+            if not results_folder.exists():
+                # if the results folder does not exist yet, create it
+                mkdir(results_folder)
+            if not results_folder.joinpath('principal_components').exists():
+                mkdir(results_folder.joinpath('principal_components'))
+            if not results_folder.joinpath('histograms').exists():
+                mkdir(results_folder.joinpath('histograms'))
 
-        for pc_key in self.pc_keys:
-            self.principal_components[pc_key] = loaded_pc[:, self.pc_keys.index(pc_key)]
+            fname = self.hist.folder.joinpath(f'results/principal_components/{fname}')
+
+        with h5py.File(fname, 'w') as f:
+            for pc_key in self.pc_keys:
+                pc_group = f.create_group(name=pc_key)
+                pc_dset = pc_group.create_dataset(name='principal_component', data=self.principal_components[pc_key])
+                pc_dset.attrs['pc_val'] = self.pc_vals[self.pc_keys.index(pc_key)]
+                pc_group.create_dataset(name='dot_prod', data=self.dot_prod[pc_key])
+
+                pc_group.create_dataset(name='pc_hist_bins', data=self.pc_hist_bins[pc_key])
+                pc_group.create_dataset(name='pc_hist_1d', data=self.pc_hist_1d[pc_key])
+
+                group1_dset = pc_group.create_dataset(name='traces_group1', data=self.traces_group1[pc_key])
+                group1_dset.attrs['selected_amount'] = self.selected_amount
+                pc_group.create_dataset(name='dot_prod_group1', data=self.dot_prod_group1[pc_key])
+                pc_group.create_dataset(name='pc_hist_bins_group1', data=self.pc_hist_bins_group1[pc_key])
+                pc_group.create_dataset(name='pc_hist_1d_group1', data=self.pc_hist_1d_group1[pc_key])
+
+                group2_dset = pc_group.create_dataset(name='traces_group2', data=self.traces_group2[pc_key])
+                group2_dset.attrs['selected_amount'] = self.selected_amount
+                pc_group.create_dataset(name='dot_prod_group2', data=self.dot_prod_group2[pc_key])
+                pc_group.create_dataset(name='pc_hist_bins_group2', data=self.pc_hist_bins_group2[pc_key])
+                pc_group.create_dataset(name='pc_hist_1d_group2', data=self.pc_hist_1d_group2[pc_key])
+
+            if save_trace_hists:
+                if not fname.parents[1].joinpath('histograms').exists():
+                    mkdir(fname.parents[1].joinpath('histograms'))
+
+                self.hist.save_histogram(
+                    fname=fname.parents[1].joinpath(f'histograms/hist_1d_total_for_{fname.stem}.h5')
+                )
+                for pc_key in self.pc_keys:
+                    self.hist_group1[pc_key].save_histogram(
+                        fname=fname.parents[1].joinpath(f'histograms/hist_1d_group1_for_{fname.stem}_{pc_key}.h5')
+                    )
+                    self.hist_group2[pc_key].save_histogram(
+                        fname=fname.parents[1].joinpath(f'histograms/hist_1d_group2_for_{fname.stem}_{pc_key}.h5')
+                    )
+
+        print(f'Principal components saved to {fname}.')
+
+    def load_principal_components(self, fname: Union[Path, str], source_type: str = 'h5py',
+                                  load_trace_hists: bool = False):
+        if source_type == 'igor':
+            loaded_pc = np.loadtxt(fname, skiprows=1)
+
+            self.num_of_pcs = loaded_pc.shape[1]
+            self.pc_keys = tuple(f'PC{i + 1}' for i in range(self.num_of_pcs))
+
+            for pc_key in self.pc_keys:
+                self.principal_components[pc_key] = loaded_pc[:, self.pc_keys.index(pc_key)]
+
+        elif source_type == 'h5py':
+            if isinstance(fname, str):
+                results_folder = self.hist.folder.joinpath('results')
+                fname = results_folder.joinpath(f'principal_components/{fname}')
+
+            with h5py.File(fname, 'r') as f:
+                self.num_of_bins = None
+                self.hist_min = None  # take the minimum value of the dot product
+                self.hist_max = None  # take the maximum value of the dot product
+                self.pc_keys = tuple(f.keys())
+                for pc_key in self.pc_keys:
+                    self.principal_components[pc_key] = f[pc_key]['principal_component'][:]
+                    self.pc_vals[pc_key] = f[pc_key]['principal_component'].attrs['pc_val']
+                    # Projection to PCs
+                    self.dot_prod[pc_key] = f[pc_key]['dot_prod']
+
+                    # PC histogram
+                    self.pc_hist_bins[pc_key] = f[pc_key]['pc_hist_bins']
+                    self.pc_hist_1d[pc_key] = f[pc_key]['pc_hist_1d']
+
+                    # Selected traces, their projections to the PCs, the histograms of the dot products
+                    self.traces_group1[pc_key] = f[pc_key]['traces_group1']
+                    self.selected_amount = f[pc_key]['traces_group1'].attrs['selected_amount']
+                    self.dot_prod_group1[pc_key] = f[pc_key]['dot_prod_group1']
+                    self.pc_hist_bins_group1[pc_key] = f[pc_key]['pc_hist_bins_group1']
+                    self.pc_hist_1d_group1[pc_key] = f[pc_key]['pc_hist_1d_group1']
+                    self.traces_group2[pc_key] = f[pc_key]['traces_group2']
+                    self.dot_prod_group2[pc_key] = f[pc_key]['dot_prod_group2']
+                    self.pc_hist_bins_group2[pc_key] = f[pc_key]['pc_hist_bins_group2']
+                    self.pc_hist_1d_group2[pc_key] = f[pc_key]['pc_hist_1d_group2']
+
+                self.num_of_bins = tuple(self.pc_hist_bins[pc_key].shape[0] for pc_key in self.pc_keys)
+                self.hist_min = tuple(min(self.pc_hist_bins[pc_key]) for pc_key in self.pc_keys)
+                self.hist_max = tuple(max(self.pc_hist_bins[pc_key]) for pc_key in self.pc_keys)
+
+            if load_trace_hists:
+                # Histograms for traces selected via PCs
+                # self.hist.load_histogram(
+                #     fname=fname.parents[1].joinpath(f'histograms/hist_1d_total_for_pca_{pc_key}.h5')
+                # )
+                for pc_key in self.pc_keys:
+                    self.hist_group1[pc_key] = Histogram(folder=fname.parents[2],
+                                                         load_from=fname.parents[1].joinpath(
+                                                             f'histograms/hist_1d_group1_for_{fname.stem}_{pc_key}.h5'
+                                                            )
+                                                         )
+                    self.hist_group2[pc_key] = Histogram(folder=fname.parents[2],
+                                                         load_from=fname.parents[1].joinpath(
+                                                             f'histograms/hist_1d_group2_for_{fname.stem}_{pc_key}.h5'
+                                                         )
+                                                         )
+
+        else:
+            raise NotImplementedError('Source type only accepts "igor" or "h5py" as input, '
+                                      'other types are not implemented yet.')
 
     def calc_principal_components(self, direction: str = 'pull'):
         """
@@ -91,12 +226,11 @@ class PCA:
             raise ValueError(f"Unknown value {direction} for parameter `direction`. Valid choices: 'pull' or 'push'.")
 
         eig_vals, eig_vecs = np.linalg.eigh(corr_2d)
-        self.pc_vals = np.zeros(self.num_of_pcs)
+        # self.pc_vals = np.zeros(self.num_of_pcs)
 
         for i in range(self.num_of_pcs):
             self.principal_components[f'PC{i+1}'] = eig_vecs[:, ::-1][:, i]
-
-        self.pc_vals = eig_vals[::-1][:self.num_of_pcs]/sum(eig_vals)
+            self.pc_vals[f'PC{i+1}'] = eig_vals[::-1][i]/sum(eig_vals)
 
     def plot_pcs(self, dpi: int = 600, ax=None):
         """
@@ -214,6 +348,7 @@ class PCA:
         -------
 
         """
+        self.selected_amount = percentage
         cut_off_index = int(percentage / 100 * self.hist.traces.shape[0])
         for pc_key in self.pc_keys:
             group1_indxs = np.argsort(self.dot_prod[pc_key])[:cut_off_index]

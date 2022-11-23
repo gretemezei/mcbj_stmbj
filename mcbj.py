@@ -1249,9 +1249,6 @@ class Histogram:
             ax_pull = ax[0]
             ax_push = ax[1]
 
-        ax_pull.set_yscale('log')
-        ax_push.set_yscale('log')
-
         ax_pull.set_ylabel(r'Conductance $[G_{0}]$')
         ax_push.set_ylabel(r'Conductance $[G_{0}]$')
         ax_pull.set_xlabel(r'Trace number')
@@ -1265,12 +1262,16 @@ class Histogram:
         ax_pull.xaxis.tick_top()
         ax_pull.xaxis.set_label_position('top')
 
-        ax_pull.yaxis.set_major_locator(ticker.LogLocator(base=10.0, subs=(1.0,), numticks=9))
-        ax_push.yaxis.set_major_locator(ticker.LogLocator(base=10.0, subs=(1.0,), numticks=9))
-        ax_pull.yaxis.set_minor_locator(ticker.LogLocator(base=10.0, subs=np.arange(0, 1, 0.1), numticks=9))
-        ax_push.yaxis.set_minor_locator(ticker.LogLocator(base=10.0, subs=np.arange(0, 1, 0.1), numticks=9))
-        ax_pull.yaxis.set_minor_formatter(ticker.NullFormatter())
-        ax_push.yaxis.set_minor_formatter(ticker.NullFormatter())
+        if self.conductance_log_scale:
+            ax_pull.set_yscale('log')
+            ax_push.set_yscale('log')
+
+            ax_pull.yaxis.set_major_locator(ticker.LogLocator(base=10.0, subs=(1.0,), numticks=9))
+            ax_push.yaxis.set_major_locator(ticker.LogLocator(base=10.0, subs=(1.0,), numticks=9))
+            ax_pull.yaxis.set_minor_locator(ticker.LogLocator(base=10.0, subs=np.arange(0, 1, 0.1), numticks=9))
+            ax_push.yaxis.set_minor_locator(ticker.LogLocator(base=10.0, subs=np.arange(0, 1, 0.1), numticks=9))
+            ax_pull.yaxis.set_minor_formatter(ticker.NullFormatter())
+            ax_push.yaxis.set_minor_formatter(ticker.NullFormatter())
 
         x_edges = np.arange(0, self.temporal_hist_pull.shape[0], 1)
         y_edges = self.hist_1d_bins

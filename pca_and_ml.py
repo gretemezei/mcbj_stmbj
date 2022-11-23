@@ -462,7 +462,8 @@ class PCA:
             ax[i].plot(self.hist_group1[pc_key].hist_1d_bins,
                        self.hist_group2[pc_key].hist_1d_pull, label='group2', c=group2_color,
                        lw=1)
-            ax[i].set_xscale('log')
+            if self.hist_group1[pc_key].conductance_log_scale:
+                ax[i].set_xscale('log')
             ax[i].set_xlim(self.hist_group1[pc_key].conductance_range)
             ax[i].set_ylim(ylims)
             ax[i].legend(fontsize='xx-small')

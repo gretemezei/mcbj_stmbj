@@ -1381,7 +1381,8 @@ class Histogram:
         ax.set_xlabel(r'Conductance $[G_{0}]$')
         ax.set_ylabel(r'Normalized counts [a.u.]')
 
-        ax.set_xscale('log')
+        if self.conductance_log_scale:
+            ax.set_xscale('log')
         ax.set_xlim(min(self.hist_1d_bins), max(self.hist_1d_bins))
 
         ax.plot(self.hist_1d_bins, self.hist_1d_pull, color=self.color_pull)
@@ -1543,7 +1544,6 @@ class Histogram:
             ax.set_xlim(max(x_mesh.flatten()), min(x_mesh.flatten()))
         else:
             raise ValueError(f'Unknown parameter for direction: {direction}. Valid choices include: ["pull", "push"]')
-        ax.set_yscale('log')
 
         ax.set_ylabel(r'Conductance $[G_{0}]$')
         ax.set_xlabel(r'Piezo $[V]$')
@@ -1551,9 +1551,12 @@ class Histogram:
         ax.xaxis.set_ticks_position('both')
         ax.yaxis.set_ticks_position('both')
 
-        ax.yaxis.set_major_locator(ticker.LogLocator(base=10.0, subs=(1.0,), numticks=9))
-        ax.yaxis.set_minor_locator(ticker.LogLocator(base=10.0, subs=np.arange(0, 1, 0.1), numticks=9))
-        ax.yaxis.set_minor_formatter(ticker.NullFormatter())
+        if self.conductance_log_scale:
+            ax.set_yscale('log')
+            ax.yaxis.set_major_locator(ticker.LogLocator(base=10.0, subs=(1.0,), numticks=9))
+            ax.yaxis.set_minor_locator(ticker.LogLocator(base=10.0, subs=np.arange(0, 1, 0.1), numticks=9))
+            ax.yaxis.set_minor_formatter(ticker.NullFormatter())
+
         im_norm = ax.pcolormesh(x_mesh, y_mesh, hist_2d, cmap=utils.cmap_geo32, **kwargs)
 
         return ax
@@ -1587,10 +1590,11 @@ class Histogram:
         ax_push.xaxis.set_ticks_position('both')
         ax_push.yaxis.set_ticks_position('both')
 
-        ax_pull.set_yscale('log')
-        ax_push.set_yscale('log')
-        ax_pull.set_ylim(1e-6, 10)
-        ax_push.set_ylim(1e-6, 10)
+        # if self.conductance_log_scale:
+        #     ax_pull.set_yscale('log')
+        #     ax_push.set_yscale('log')
+        #     ax_pull.set_ylim(1e-6, 10)
+        #     ax_push.set_ylim(1e-6, 10)
 
         ax_pull = self.plot_hist_2d_one(direction='pull', ax=ax_pull, **kwargs)
         ax_push = self.plot_hist_2d_one(direction='push', ax=ax_push, **kwargs)

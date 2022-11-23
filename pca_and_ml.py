@@ -393,11 +393,22 @@ class PCA:
 
         return ax
 
-    def calc_group_histograms(self,
+    def calc_group_histograms(self, chosen_pc: Optional[Tuple[str, ...]] = None,
                               conductance_range: Optional[Tuple[float, float]] = None,
                               conductance_bins_num: Optional[int] = None,
                               conductance_log_scale: Optional[bool] = None,
                               conductance_bins_mode: Optional[str] = None):
+
+        if chosen_pc is None:
+            chosen_pc = self.pc_keys
+        elif isinstance(chosen_pc, tuple):
+            if any([i not in self.pc_keys for i in chosen_pc]):
+                raise KeyError(f'Invalid key(s) {np.array(chosen_pc)[[i not in self.pc_keys for i in chosen_pc]]}. '
+                               f'Make sure to enter the principal component keys correctly. Valid keys: {self.pc_keys}')
+            else:
+                ...  # AOK
+        else:
+            raise ValueError(f'Unknown value {chosen_pc} for parameter `chosen_pc.`')
 
         if conductance_range is None:
             conductance_range = self.hist.conductance_range
@@ -408,7 +419,7 @@ class PCA:
         if conductance_bins_mode is None:
             conductance_bins_mode = self.hist.conductance_bins_mode
 
-        for pc_key in self.pc_keys:
+        for pc_key in chosen_pc:
             hist_group1 = Histogram(folder=self.hist.folder, traces=self.traces_group1[pc_key],
                                     conductance_range=conductance_range,
                                     conductance_bins_num=conductance_bins_num,
@@ -423,10 +434,10 @@ class PCA:
                                                  max(self.hist.hist_2d_xmesh_push.flatten())))
 
             hist_group2 = Histogram(folder=self.hist.folder, traces=self.traces_group2[pc_key],
-                                    conductance_range=self.hist.conductance_range,
-                                    conductance_bins_num=self.hist.conductance_bins_num,
-                                    conductance_log_scale=self.hist.conductance_log_scale,
-                                    conductance_bins_mode=self.hist.conductance_bins_mode)
+                                    conductance_range=conductance_range,
+                                    conductance_bins_num=conductance_bins_num,
+                                    conductance_log_scale=conductance_log_scale,
+                                    conductance_bins_mode=conductance_bins_mode)
             print(f'Calculating 1D and 2D histograms of {pc_key} group2.')
             hist_group2.calc_hist_1d()
             hist_group2.calc_hist_2d(align_at=self.hist.align_at,

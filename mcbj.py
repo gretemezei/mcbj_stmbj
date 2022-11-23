@@ -1641,22 +1641,22 @@ class Histogram:
         ax_corr = fig.add_subplot(gs[0])
         ax_colorbar = fig.add_subplot(gs[1])
 
-        ax_corr.set_xscale('log')
-        ax_corr.set_yscale('log')
-
         ax_corr.set_xlabel(r'Conductance $[G_{0}]$')
         ax_corr.set_ylabel(r'Conductance $[G_{0}]$')
 
         ax_corr.xaxis.set_ticks_position('both')
         ax_corr.yaxis.set_ticks_position('both')
 
-        ax_corr.xaxis.set_major_locator(ticker.LogLocator(base=10.0, subs=(1.0,), numticks=9))
-        ax_corr.xaxis.set_minor_locator(ticker.LogLocator(base=10.0, subs=np.arange(0, 1, 0.1), numticks=9))
-        ax_corr.xaxis.set_minor_formatter(ticker.NullFormatter())
+        if self.conductance_log_scale:
+            ax_corr.set_xscale('log')
+            ax_corr.set_yscale('log')
+            ax_corr.xaxis.set_major_locator(ticker.LogLocator(base=10.0, subs=(1.0,), numticks=9))
+            ax_corr.xaxis.set_minor_locator(ticker.LogLocator(base=10.0, subs=np.arange(0, 1, 0.1), numticks=9))
+            ax_corr.xaxis.set_minor_formatter(ticker.NullFormatter())
 
-        ax_corr.yaxis.set_major_locator(ticker.LogLocator(base=10.0, subs=(1.0,), numticks=9))
-        ax_corr.yaxis.set_minor_locator(ticker.LogLocator(base=10.0, subs=np.arange(0, 1, 0.1), numticks=9))
-        ax_corr.yaxis.set_minor_formatter(ticker.NullFormatter())
+            ax_corr.yaxis.set_major_locator(ticker.LogLocator(base=10.0, subs=(1.0,), numticks=9))
+            ax_corr.yaxis.set_minor_locator(ticker.LogLocator(base=10.0, subs=np.arange(0, 1, 0.1), numticks=9))
+            ax_corr.yaxis.set_minor_formatter(ticker.NullFormatter())
 
         x_mesh, y_mesh = np.meshgrid(self.hist_1d_bins, self.hist_1d_bins)
 

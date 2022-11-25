@@ -104,7 +104,7 @@ class PCA:
             for pc_key in self.pc_keys:
                 pc_group = f.create_group(name=pc_key)
                 pc_dset = pc_group.create_dataset(name='principal_component', data=self.principal_components[pc_key])
-                pc_dset.attrs['pc_val'] = self.pc_vals[self.pc_keys.index(pc_key)]
+                pc_dset.attrs['pc_val'] = self.pc_vals[pc_key]
                 pc_group.create_dataset(name='dot_prod', data=self.dot_prod[pc_key])
 
                 pc_group.create_dataset(name='pc_hist_bins', data=self.pc_hist_bins[pc_key])

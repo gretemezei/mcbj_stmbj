@@ -339,7 +339,7 @@ class TracePair:
         if self.hold_index_push is not None:
             self.hold_conductance_push = self.conductance_push[self.hold_index_push]
 
-    def align_trace(self, align_at: Optional[float] = None, interpolate: bool = True):
+    def align_trace(self, align_at: Optional[float] = None, interpolate: bool = False):
 
         if align_at is None:
             self.aligned_piezo_pull = self.piezo_pull
@@ -1411,7 +1411,7 @@ class Histogram:
 
     def calc_hist_2d(self,
                      align_at: float,
-                     interpolate: bool = True,
+                     interpolate: bool = False,
                      range_pull: Optional[Tuple[float, float]] = (-1.5, 1),
                      range_push: Optional[Tuple[float, float]] = (-3, 1),
                      xbins_pull: Optional[int] = 100,
@@ -1882,7 +1882,7 @@ class Histogram:
         return ax
 
     def calc_stats(self, align_at: float,
-                   interpolate: bool = True,
+                   interpolate: bool = False,
                    range_pull: Tuple[float, float] = (-1.5, 1),
                    range_push: Tuple[float, float] = (-3, 1),
                    xbins_pull: int = 100,

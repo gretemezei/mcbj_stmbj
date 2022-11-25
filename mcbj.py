@@ -189,6 +189,8 @@ class TracePair:
         self.z0_pull = None
         self.z0_push = None
         self.align_at = None
+        self.piezo_shift_pull = None
+        self.piezo_shift_push = None
 
         self.R_parallel = None
         self.R_serial = None
@@ -363,10 +365,12 @@ class TracePair:
 
             # print(f'ind1 = ({x1_pull}, {y1_pull}), ind2 = ({x2_pull}, {y2_pull}')
             if interpolate:
-                shift_pull = utils.interpolate(ind1=(x1_pull, y1_pull), ind2=(x2_pull, y2_pull), y=self.align_at)
+                self.piezo_shift_pull = utils.interpolate(ind1=(x1_pull, y1_pull),
+                                                          ind2=(x2_pull, y2_pull),
+                                                          y=self.align_at)
             else:
-                shift_pull = x2_pull
-            self.aligned_piezo_pull = self.piezo_pull - shift_pull
+                self.piezo_shift_pull = x2_pull
+            self.aligned_piezo_pull = self.piezo_pull - self.piezo_shift_pull
             self.aligned_time_pull = self.aligned_piezo_pull / self.rate
 
             x1_push = self.piezo_push[np.where(self.conductance_push < self.align_at)[0][which_point_push] - 1]
@@ -377,10 +381,12 @@ class TracePair:
 
             # print(f'ind1 = ({x1_push}, {y1_push}), ind2 = ({x2_push}, {y2_push}')
             if interpolate:
-                shift_push = utils.interpolate(ind1=(x1_push, y1_push), ind2=(x2_push, y2_push), y=self.align_at)
+                self.piezo_shift_push = utils.interpolate(ind1=(x1_push, y1_push),
+                                                          ind2=(x2_push, y2_push),
+                                                          y=self.align_at)
             else:
-                shift_push = x2_push
-            self.aligned_piezo_push = self.piezo_push - shift_push
+                self.piezo_shift_push = x2_push
+            self.aligned_piezo_push = self.piezo_push - self.piezo_shift_push
             self.aligned_time_push = self.aligned_piezo_push / self.rate
 
     def calc_plateau_length(self,

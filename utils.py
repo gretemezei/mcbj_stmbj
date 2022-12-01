@@ -688,6 +688,10 @@ def fit_func_lin(x, a, b):
     return -1 * a * x + b
 
 
+def gaussian_fun(x, a, b, c):
+    return a * np.exp(-1 * (x-b)**2 / (2*c**2))
+
+
 def find_level(arr: np.ndarray, level: float, x: Optional[np.ndarray] = None) -> Union[float, None]:
     """
     Find the point where an array crosses a pre-defined level

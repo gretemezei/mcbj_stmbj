@@ -267,7 +267,7 @@ class TracePair:
 
         Parameters
         ----------
-        bj_file : Path or h5py._hl.files.File
+        bj_file : `~pathlib.Path` or `~h5py.File`
             path to the file or an opened for read file instance to load data from
 
         Returns
@@ -360,8 +360,8 @@ class TracePair:
             x1_pull = self.piezo_pull[np.where(self.conductance_pull < self.align_at)[0][which_point_pull]]
             y1_pull = self.conductance_pull[np.where(self.conductance_pull < self.align_at)[0][which_point_pull]]
 
-            x2_pull = self.piezo_pull[np.where(self.conductance_pull < self.align_at)[0][which_point_pull] + 1]
-            y2_pull = self.conductance_pull[np.where(self.conductance_pull < self.align_at)[0][which_point_pull] + 1]
+            x2_pull = self.piezo_pull[np.where(self.conductance_pull < self.align_at)[0][which_point_pull] - 1]
+            y2_pull = self.conductance_pull[np.where(self.conductance_pull < self.align_at)[0][which_point_pull] - 1]
 
             # print(f'ind1 = ({x1_pull}, {y1_pull}), ind2 = ({x2_pull}, {y2_pull}')
             if interpolate:
@@ -898,8 +898,10 @@ class Histogram:
 
     Parameters
     ----------
-    folder : Path
+    folder : `~pathlib.Path`
         path to reach files containing the data
+    load_from : str, `~pathlib.Path`
+        file name or file path to load the histogram from
     start_trace : int
         1st trace for statistical analysis
     end_trace : int
@@ -915,7 +917,7 @@ class Histogram:
 
     Attributes
     ----------
-    folder : Path
+    folder : `~pathlib.Path`
         path to reach files containing the data
     start_trace : int
         trace number of 1st trace taken in the statistics
@@ -929,16 +931,10 @@ class Histogram:
         bins constructed to calculate 1d histograms
     conductance_log_scale : bool
         if True, conductance axis is set to log scale and the histograms are calculated log binned
-    bj_files : numpy.ndarray
-        collected paths to break junction files that contain traces from `start_trace` and `end_trace`
     temporal_hist_pull : numpy.ndarray
         temporal histogram from individual 1d conductance histograms of pull traces
     temporal_hist_push : numpy.ndarray
         temporal histogram from individual 1d conductance histograms of push traces
-    trace_length_pull : numpy.ndarray
-        length of each pull trace
-    trace_length_push : numpy.ndarary
-        length of each push trace
     plateau_length_pull : numpy.ndarray
         length of the selected plateau in points or in V for each pull trace
     plateau_length_push  : numpy.ndarray
@@ -973,12 +969,6 @@ class Histogram:
         color for the pull histogram
     color_push : str
         color for the push histogram
-    blues : List[str, ...]
-        blue colors for plots
-    reds : List[str, ...]
-        red colors
-    cmap_geo32 : colormap
-        colormap for 2d histograms, same as in IgorPro
 
     """
 
@@ -1058,6 +1048,19 @@ class Histogram:
             self.load_histogram(fname=load_from)
     
     def save_histogram(self, fname: Union[str, Path]):
+        """
+        Saves histogram to h5 file
+
+        Parameters
+        ----------
+        fname : Union[str, `~pathlib.Path`]
+            filename or path to the file where histogram should be saved
+
+        Returns
+        -------
+
+        """
+
         if isinstance(fname, str):
             if not self.folder.joinpath('results').exists():
                 mkdir(self.folder.joinpath('results'))
@@ -1115,6 +1118,18 @@ class Histogram:
         print(f'Histogram saved to {fname}.')
 
     def load_histogram(self, fname: Union[str, Path]):
+        """
+        Load histogram from file `fname`
+
+        Parameters
+        ----------
+        fname : Union[str, `~pathlib.Path`
+
+        Returns
+        -------
+
+        """
+
         if isinstance(fname, str):
             fname = self.folder.joinpath(f'results/histograms/{fname}')
         with h5py.File(fname, 'r') as f:
@@ -1133,11 +1148,11 @@ class Histogram:
                 self.hist_1d_push = f['hist_1d_push'][:]
 
             if 'hist_2d_pull' in file_keys:
-                self.hist_2d_pull = f['hist_1d_pull'][:]
+                self.hist_2d_pull = f['hist_2d_pull'][:]
                 self.hist_2d_xmesh_pull = f['hist_2d_xmesh_pull'][:]
                 self.hist_2d_ymesh_pull = f['hist_2d_ymesh_pull'][:]
             if 'hist_2d_push' in file_keys:
-                self.hist_2d_push = f['hist_1d_push'][:]
+                self.hist_2d_push = f['hist_2d_push'][:]
                 self.hist_2d_xmesh_push = f['hist_2d_xmesh_push'][:]
                 self.hist_2d_ymesh_push = f['hist_2d_ymesh_push'][:]
 
@@ -1350,11 +1365,11 @@ class Histogram:
             self.hist_1d_bins = hist_bins
 
     def plot_hist_1d(self,
-                     ax=None,
+                     ax=None, direction=None,
                      ylims: Optional[Tuple[float, float]] = None,
                      add_hlines: Tuple[float, ...] = tuple(),
                      add_vlines: Tuple[float, ...] = tuple(),
-                     dpi: int = 600):
+                     dpi: int = 600, **kwargs):
         """
         Plot 1d conductance histogram, and add annotations
 
@@ -1363,6 +1378,8 @@ class Histogram:
         ax : `~matplotlib.axes.Axes`
             if there is a pre-existing axis, you can plot there.
             Otherwise, a new figure with a new axis will be created.
+        direction : Optional[str]
+            'pull' or 'push'
         ylims : Tuple[float, float]
             set the limits of the vertical axis
         add_hlines : Optional[Tuple[float, ...]]
@@ -1391,10 +1408,25 @@ class Histogram:
             ax.set_xscale('log')
         ax.set_xlim(min(self.hist_1d_bins), max(self.hist_1d_bins))
 
-        ax.plot(self.hist_1d_bins, self.hist_1d_pull, color=self.color_pull)
-        ax.fill_between(self.hist_1d_bins, np.zeros_like(self.hist_1d_pull), self.hist_1d_pull, alpha=0.5,
-                        color=self.color_pull)
-        ax.plot(self.hist_1d_bins, self.hist_1d_push, color=self.color_push, alpha=0.5)
+        if direction == 'pull':
+            # plot pull histogram only
+            ax.plot(self.hist_1d_bins, self.hist_1d_pull, color=self.color_pull, **kwargs)
+            ax.fill_between(self.hist_1d_bins, np.zeros_like(self.hist_1d_pull), self.hist_1d_pull, alpha=0.5,
+                            color=self.color_pull)
+        elif direction == 'push':
+            # plot push histogram only
+            ax.plot(self.hist_1d_bins, self.hist_1d_push, color=self.color_push, **kwargs)
+            ax.fill_between(self.hist_1d_bins, np.zeros_like(self.hist_1d_push), self.hist_1d_push, alpha=0.5,
+                            color=self.color_push)
+        elif direction is None:
+            # plot both histograms
+            ax.plot(self.hist_1d_bins, self.hist_1d_pull, color=self.color_pull, **kwargs)
+            ax.fill_between(self.hist_1d_bins, np.zeros_like(self.hist_1d_pull), self.hist_1d_pull, alpha=0.5,
+                            color=self.color_pull)
+            ax.plot(self.hist_1d_bins, self.hist_1d_push, color=self.color_push, alpha=0.5, **kwargs)
+        else:
+            raise ValueError(f"Unknown value {direction} for parameter direction. Valid choices: 'pull', 'push', None,"
+                             f"to plot the 1D histogram for the pull, push, or both directions, respectively.")
 
         if ylims is None:
             ax.set_ylim(bottom=0, top=None)
@@ -1611,6 +1643,22 @@ class Histogram:
         return ax_pull, ax_push
 
     def calc_corr_hist_2d(self):
+        """
+        Calculate correlation matrix
+
+        .. math::
+
+            C_{i,j}=C(G_i,G_j)=\\frac{\\left< (N_i(r)-\\left< N_i(r)\\right> )\\cdot (N_j(r)-\\left< N_j(r)\\right> )
+            \\right>}{\\sqrt{\\left<(N_i(r)-\\left<N_i(r)\\right>)^2\\right>\\cdot
+            \\left<(N_j(r)-\\left<N_j(r)\\right>)^2\\right>}},
+
+        where :math:`N_{i}(r)` is the :math:`i` th bin of the single histogram of trace :math:`r` and
+        :math:`N_{j}(r)` is the :math:`j` th bin of the single histogram of trace :math:`r`
+
+        Returns
+        -------
+
+        """
 
         if self.temporal_hist_pull is None or self.temporal_hist_push is None or \
            self.hist_1d_pull is None or self.hist_1d_push is None:
@@ -1635,6 +1683,20 @@ class Histogram:
         self.corr_2d_push /= np.sqrt(np.outer(np.diag(self.corr_2d_push), np.diag(self.corr_2d_push)))
 
     def plot_corr(self, mode: str = 'pull', dpi: int = 600, **kwargs):
+        """
+        Plot correlation histogram
+
+        Parameters
+        ----------
+        mode : str 'pull', 'push', 'cross',
+            'pull' or 'push' autocorrelation or 'cross' correlation
+        dpi : dots per inch
+        kwargs : keyword arguments for pcolormesh
+
+        Returns
+        -------
+
+        """
         if mode == 'pull':
             corr_to_plot = self.corr_2d_pull
         elif mode == 'push':
@@ -2044,21 +2106,23 @@ class Histogram:
         print(f"Push 2D histogram created from {count_push} traces")
 
     def plot_example_traces(self, traces: Union[int, Tuple[int, ...]], shift: float, ax=None,
-                            ylims: Tuple[float, ...] = (1e-6, 10),
+                            ylims: Tuple[float, float] = (1e-6, 10),
                             cut_conductances: Tuple[float, float] = (1e-5, 10), add_points_to_end: int = 2_000,
                             dpi=300, **kwargs):
         """
+        Plot selected trace(s) `traces` as example in one plot
 
         Parameters
         ----------
-        add_points_to_end
-        cut_conductances
-        traces : Union[int, Tuple[int, ...]
+        traces : Union[int, Tuple[int, ...]]
             if traces is an integer value, it is interpreted as the number of traces to plot
             if traces is a tuple of integer values, it is interpreted as the list of trace indices to plot
         shift : float
             the spacing between individual traces
-        ylims : limits of the vertical axis
+        ylims : Tuple[float, float]
+        limits of the vertical axis
+        add_points_to_end :
+        cut_conductances :
         ax :
         dpi : int
             dots per inch for the figure
@@ -2099,7 +2163,7 @@ class HoldTrace:
     ----------
     trace : int or str
         trace number or trace name to work with
-    load_from : Path or h5py._hl.files.File
+    load_from : `~pathlib.Path` or `~h5py.File`
         path to the file or an opened for read file instance to load data from
     bias_offset :
         bias offset in the measurement, see the spreadsheet, Default value: 0
@@ -2362,10 +2426,10 @@ class HoldTrace:
                 # I(V) measurement took place, iv refers to the last bias plateau before the I(V) signal
 
                 if np.any(self.hold_current_pull > 10 ** (1 - np.log10(self.gain))):
-                    raise MeasurementOverflow('Current overflow during I(V) cycle, in pull direction.')
+                    warnings.warn('Current overflow during I(V) cycle, in pull direction.', MeasurementOverflow)
 
                 if np.any(self.hold_current_push > 10 ** (1 - np.log10(self.gain))):
-                    raise MeasurementOverflow('Current overflow during I(V) cycle, in push direction.')
+                    warnings.warn('Current overflow during I(V) cycle, in push direction.', MeasurementOverflow)
 
                 ranges_pull = (self.bias_steps_ranges_pull[iv, 1] + 50, self.bias_steps_ranges_pull[iv + 1, 0])
                 ranges_push = (self.bias_steps_ranges_push[iv, 1] + 50, self.bias_steps_ranges_push[iv + 1, 0])
@@ -2500,7 +2564,7 @@ class HoldTrace:
 
         Parameters
         ----------
-        hold_file : Path or h5py._hl.files.File
+        hold_file : `~pathlib.Path` or `~h5py.File`
             path to the file or an opened for read file instance to load data from
 
         """
@@ -2880,7 +2944,7 @@ class HoldTrace:
 
     def plot_psds(self,
                   pull: Optional[bool] = True,
-                  colormap='Blues',
+                  color_list = None,
                   emph: Optional[int] = None,
                   plot_fit: bool = False,
                   fit_params: Optional[np.ndarray] = None,
@@ -2898,8 +2962,8 @@ class HoldTrace:
         ----------
         pull : bool
             if True, the psds for the pull hold trace are plotted, otherwise for the push hold trace
-        colormap : str
-            which colormap to use
+        color_list : List[...]
+            which colors to use
         emph : int
             the index of the bias plateau to be emphasized with opaque color, all others will appear more transparent
         plot_fit : bool
@@ -2937,21 +3001,27 @@ class HoldTrace:
             ax_psd = ax
 
         if pull:
-            bias_steps = self.bias_steps
+            bias_steps = self.bias_steps_total
             freq = self.fft_freqs_pull
             if which_psds is None:
                 psds = self.psds_pull
             else:
                 psds = self.psds_pull[which_psds]
-            color_cyc = cycler(color=utils.blues)
+
+            if color_list is None:
+                color_list = colormaps['Blues'](np.linspace(1, 0.2, len(bias_steps)))
         else:
-            bias_steps = self.bias_steps
+            bias_steps = self.bias_steps_total
             freq = self.fft_freqs_push
             if which_psds is None:
                 psds = self.psds_push
             else:
                 psds = self.psds_push[which_psds]
-            color_cyc = cycler(color=utils.reds)
+
+            if color_list is None:
+                color_list = colormaps['Reds'](np.linspace(1, 0.2, len(bias_steps)))
+
+        color_cyc = cycler(color=color_list)
 
         # color_cyc = cycler(color=cm.get_cmap(colormap)(np.linspace(1, 0.25, len(bias_steps), endpoint=False)))
         # color_cyc = cycler(color=cm.get_cmap(colormap)(np.linspace(0, 1, len(bias_steps), endpoint=False)))
@@ -3342,7 +3412,7 @@ class HoldTrace:
         """
 
         if np.any(np.mean(psds[:, np.bitwise_and(freq > fit_range[0], freq < fit_range[1])], axis=1) < 1e-30):
-            raise MeasurementOverflow('Current overflow in trace, skipping.')
+            warnings.warn('Current overflow in trace, skipping.', MeasurementOverflow)
 
         fit_params = np.zeros((psds.shape[0], 2))
         fit_errors = np.zeros((psds.shape[0], 2))
@@ -3384,7 +3454,7 @@ class HoldTrace:
     def area_under_psds(self, freq: np.ndarray, psd_results: np.ndarray,
                         freq_range: Optional[Tuple[int, int]] = None) -> np.ndarray:
         """
-        Calculate the areas under PSD curves in the given frequency range (*start*, *end*)
+        Calculate the areas under PSD curves in the given frequency range
 
         Parameters
         ----------
@@ -3444,10 +3514,10 @@ class HoldTrace:
             return multiplier * areas  # units of g0**2
 
         elif mode == 'conductance_noise':  # unitless
-            return np.sqrt(multiplier * areas) / avg_value  # unitless
+            return np.sqrt(multiplier * areas) / avg_value  # unitless \Delta G/ G
 
         elif mode == 'current_noise':
-            return np.sqrt(np.ones_like(multiplier) * areas) / avg_value  # unitless \Delta I/ I
+            return np.sqrt(areas) / avg_value  # unitless \Delta I/ I
 
         raise ValueError("Undefined mode. Valid choices: 'noise_power', 'conductance_noise' or 'current_noise'.")
 
@@ -3660,6 +3730,9 @@ class NoiseStats:
         -------
 
         """
+
+        warnings.filterwarnings("error")
+
         collected_errors = []
 
         if self.traces is None:
@@ -3728,6 +3801,8 @@ class NoiseStats:
             except MeasurementNotComplete:
                 collected_errors.append(f'Measurement incomplete at {trace}')
                 continue
+
+        warnings.resetwarnings()
 
         self.fft_freqs_pull = hold_trace.fft_freqs_pull
         self.fft_freqs_push = hold_trace.fft_freqs_push
@@ -3909,6 +3984,8 @@ class NoiseStats:
         """
         collected_errors = []
 
+        warnings.filterwarnings("error")
+
         for hold_file in tqdm(self.hold_files, desc="Processing hold files"):
             bj_file = self.home_folder.joinpath(re.sub(r'hold_data', r'break_junction', hold_file.name))
             with h5py.File(bj_file, "r") as bj_in:
@@ -3986,6 +4063,8 @@ class NoiseStats:
                         except MeasurementNotComplete:
                             collected_errors.append(f'Measurement incomplete at {trace}')
                             continue
+
+        warnings.resetwarnings()
 
         self.fft_freqs_pull = hold_trace.fft_freqs_pull
         self.fft_freqs_push = hold_trace.fft_freqs_push

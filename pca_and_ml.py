@@ -373,7 +373,55 @@ class PCA:
                                               xbins_num=self.num_of_bins[self.pc_keys.index(pc_key)],
                                               log_scale=False, bin_mode='total')
 
-    def plot_pc_hist(self, pc_key: str, plot_groups: bool = False, dpi: int = 600, ax=None):
+    def select_percentage_slice(self, percentage: int = 10, which_slice: int = 0, calc_histograms: bool = True):
+        """
+        Select `percentage` percent of traces from the given slice of the PCA histogram
+
+        Parameters
+        ----------
+        percentage : int, default=10
+        the amount of traces to select from each side, stored in group1 and group2, respectively
+        which_slice : int, default=0
+        which slice to choose
+        calc_histograms : bool, default: True
+        calculate the histograms of the selections
+
+        Returns
+        -------
+
+        """
+        self.selected_amount = percentage
+        num_of_selected = int(percentage / 100 * self.hist.traces.shape[0])
+        for pc_key in self.pc_keys:
+            group1_indxs = np.argsort(self.dot_prod[pc_key])[which_slice * num_of_selected:
+                                                             (which_slice+1) * num_of_selected]
+            self.traces_group1[pc_key] = self.hist.traces[group1_indxs]
+            self.dot_prod_group1[pc_key] = self.dot_prod[pc_key][group1_indxs]
+            if which_slice == 0:
+                group2_indxs = np.argsort(self.dot_prod[pc_key])[-1 * (which_slice+1) * num_of_selected:]
+            else:
+                group2_indxs = np.argsort(self.dot_prod[pc_key])[-1 * (which_slice + 1) * num_of_selected:
+                                                                 -1 * which_slice * num_of_selected]
+            self.traces_group2[pc_key] = self.hist.traces[group2_indxs]
+            self.dot_prod_group2[pc_key] = self.dot_prod[pc_key][group2_indxs]
+
+            if calc_histograms:
+                self.pc_hist_bins_group1[pc_key], self.pc_hist_1d_group1[pc_key] = \
+                    utils.calc_hist_1d_single(data=self.dot_prod_group1[pc_key],
+                                              xrange=(self.hist_min[self.pc_keys.index(pc_key)],
+                                                      self.hist_max[self.pc_keys.index(pc_key)]),
+                                              xbins_num=self.num_of_bins[self.pc_keys.index(pc_key)],
+                                              log_scale=False, bin_mode='total')
+
+                self.pc_hist_bins_group2[pc_key], self.pc_hist_1d_group2[pc_key] = \
+                    utils.calc_hist_1d_single(data=self.dot_prod_group2[pc_key],
+                                              xrange=(self.hist_min[self.pc_keys.index(pc_key)],
+                                                      self.hist_max[self.pc_keys.index(pc_key)]),
+                                              xbins_num=self.num_of_bins[self.pc_keys.index(pc_key)],
+                                              log_scale=False, bin_mode='total')
+
+    def plot_pc_hist(self, pc_key: str, plot_groups: bool = False, group_colors: Tuple[str, str] = ('b', 'r'),
+                     dpi: int = 600, ax=None):
         if ax is None:
             fig, ax = plt.subplots(1, figsize=utils.cm2inch(10, 5), dpi=dpi)
 
@@ -385,11 +433,11 @@ class PCA:
             ax.bar(x=self.pc_hist_bins_group1[pc_key],
                    height=self.pc_hist_1d_group1[pc_key],
                    width=np.mean(np.diff(self.pc_hist_bins_group1[pc_key])),
-                   align='edge', color='b', edgecolor='b', lw=0)
+                   align='edge', color=group_colors[0], edgecolor='None', lw=0, alpha=0.9)
             ax.bar(x=self.pc_hist_bins_group2[pc_key],
                    height=self.pc_hist_1d_group2[pc_key],
                    width=np.mean(np.diff(self.pc_hist_bins_group1[pc_key])),
-                   align='edge', color='r', edgecolor='r', lw=0)
+                   align='edge', color=group_colors[1], edgecolor='None', lw=0, alpha=0.9)
 
         return ax
 
@@ -516,6 +564,7 @@ class PCA:
 def compare_principal_components(pcs: Tuple[PCA, ...], labels=None, fig_size=None, dpi=300, **kwargs):
     use_cmap = colormaps['tab20'](np.linspace(0, 1, 20))  # 20 different color, to compare 2 sets of 10 PCs
     number_of_pcs_each = list(map(lambda x: x.num_of_pcs, pcs))
+    max_val = 0
     if np.unique(number_of_pcs_each).shape[0] == 1:
         if labels is None:
             labels = tuple(f'pc{i+1}' for i in range(len(pcs)))
@@ -526,9 +575,10 @@ def compare_principal_components(pcs: Tuple[PCA, ...], labels=None, fig_size=Non
         for i, pc_key in enumerate(pcs[0].pc_keys):
             ax[i].set_prop_cycle, cycler('color', use_cmap)
             for pc in pcs:
+                if max(abs(pc.principal_components[pc_key])) > max_val:
+                    max_val = max(abs(pc.principal_components[pc_key]))
                 ax[i].plot(pc.hist.hist_1d_bins, pc.principal_components[pc_key], label=labels[pcs.index(pc)], **kwargs)
-                ax[i].set_ylim((-1.1 * max(abs(pc.principal_components[pc_key])),
-                                1.1 * max(abs(pc.principal_components[pc_key]))))
+                ax[i].set_ylim((-1.1 * max_val, 1.1 * max_val))
             # ax[i].plot(pcs[0].hist.hist_1d_bins, np.zeros_like(pcs[0].hist.hist_1d_bins),
             #            label=f'zero line', lw=0.6, ls='--', c='grey')
             ax[i].axhline(0, ls='--', lw=0.6, c='grey')

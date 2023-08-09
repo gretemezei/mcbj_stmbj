@@ -7,7 +7,7 @@ import math
 from typing import Union, Tuple, List, Optional
 from matplotlib.colors import ListedColormap
 
-cmap_geo32 = ListedColormap(np.array([[255 / 255, 255 / 255, 255 / 255, 1],
+cmap_geo32 = ListedColormap(np.array([[255 / 255, 255 / 255, 255 / 255, 0],
                                       [255 / 255, 235 / 255, 235 / 255, 1],
                                       [255 / 255, 215 / 255, 215 / 255, 1],
                                       [255 / 255, 196 / 255, 196 / 255, 1],
@@ -54,7 +54,7 @@ class MeasurementNotComplete(Exception):
         self.message = message
 
 
-class MeasurementOverflow(Exception):
+class MeasurementOverflow(Warning):
     def __init__(self, message):
         self.message = message
 
@@ -230,12 +230,31 @@ def convert_g0_to_ohm(conductance: Union[float, np.ndarray]) -> Union[float, np.
 
     Returns
     -------
-    res : float or numpy.array
+    resistance : float or numpy.array
         resistance in units of Ohm
 
     """
 
     return (conductance / 12900) ** -1
+
+
+def convert_ohm_to_g0(resistance: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+    """
+    Converts conductance in units of :math:`G_{0}` to resistance in Ohm
+
+    Parameters
+    ----------
+    resistance: float or numpy.array
+        resistance in units of Ohm
+
+    Returns
+    -------
+    conductance : float or numpy.array
+        conductance in units of the conductance quantum ::math::`G_{0}`
+
+    """
+
+    return resistance ** -1 * 12900
 
 
 def convert_pt_to_sec(value_pt: Union[int, np.ndarray], sample_rate: int) -> Union[float, np.ndarray]:
@@ -609,7 +628,7 @@ def choose_traces(trace_array: np.ndarray, first: int, last: Optional[int] = Non
 
 def sort_by_trace_num(trace_names_array: np.ndarray):
     """
-    Returns tha array of trace names sorted by trace numbers instead of alphabetical order
+    Returns the array of trace names sorted by trace numbers instead of alphabetical order
 
     Parameters
     ----------
@@ -689,6 +708,19 @@ def fit_func_lin(x, a, b):
 
 
 def gaussian_fun(x, a, b, c):
+    """
+
+    Parameters
+    ----------
+    x
+    a :
+    b : mean
+    c : standard deviation
+
+    Returns
+    -------
+
+    """
     return a * np.exp(-1 * (x-b)**2 / (2*c**2))
 
 
@@ -758,7 +790,8 @@ def calc_hist_1d_single(data: np.ndarray, xrange: Tuple[float, float] = (1e-6, 1
     bin_mode : Optional, str, default value: None
         only valid when log_scale is True
         mode of definition of the bins: 'decade': xbins_num means the number of bins in a decade
-                                        'total': xbins_num means the total number of bins
+        'total': xbins_num means the total number of bins
+
     Returns
     -------
     x : np.ndarray
@@ -807,8 +840,6 @@ def calc_hist_2d_single(x: np.ndarray, y: np.ndarray,
         values of the horizontal axis
     y : np.ndarray
         values of the vertical axis
-    align_at : float
-        y value where each array is scaled together
     xrange : Tuple[float, float]
         horizontal range of bins
     log_scale_x : bool, default: False
@@ -823,12 +854,12 @@ def calc_hist_2d_single(x: np.ndarray, y: np.ndarray,
     bin_mode_x : Optional, str, default value: None
         only valid when log_scale_x is True
         mode of definition of the bins: 'decade': num_bins[0] means the number of bins in a decade
-                                        'total': num_bins[0] means the total number of bins
+        'total': num_bins[0] means the total number of bins
         if log_scale_x is True and bin_mode_x is None, the value defaults to 'decade'
     bin_mode_y : Optional, str, default value: None
         only valid when log_scale_y is True
         mode of definition of the bins: 'decade': num_bins[1] means the number of bins in a decade
-                                        'total': num_bins[1] means the total number of bins
+        'total': num_bins[1] means the total number of bins
         if log_scale_y is True and bin_mode_y is None, the value defaults to 'decade'
 
     Returns
@@ -841,6 +872,7 @@ def calc_hist_2d_single(x: np.ndarray, y: np.ndarray,
         counts at each bin (shape: (number of bins along x, number of bins along y))
 
     """
+
     # x: piezo
     # y: conductance
     if x.shape[0] != y.shape[0]:
@@ -889,7 +921,8 @@ def calc_hist_2d_single(x: np.ndarray, y: np.ndarray,
 def interpolate(ind1: Tuple[float, float],
                 ind2: Tuple[float, float],
                 x: Optional[float] = None,
-                y: Optional[float] = None) -> float:
+                y: Optional[float] = None,
+                log_y: bool = True) -> float:
     """
 
     Parameters
@@ -898,18 +931,34 @@ def interpolate(ind1: Tuple[float, float],
     ind2 : indices of second point
     x : x value where to determine the y value
     y : y value for which to get the x value
+    log_y : bool
 
     Returns
     -------
     y (if x is given) or x (if y is given)
     """
 
-    if x is not None and y is None:
-        return ind1[1] + (x-ind1[0])*(ind2[1]-ind1[1])/(ind2[0]-ind1[0])
-    elif y is not None and x is None:
-        return ind1[0] + (y-ind1[1])*(ind2[0]-ind1[0])/(ind2[1]-ind1[1])
+    if log_y:
+        temp1 = (ind1[0], np.log10(ind1[1]))
+        temp2 = (ind2[0], np.log10(ind2[1]))
+        ind1 = temp1
+        ind2 = temp2
+        y = np.log10(y)
+
+        if x is not None and y is None:
+            return 10**(ind1[1] + (x - ind1[0]) * (ind2[1] - ind1[1]) / (ind2[0] - ind1[0]))
+        elif y is not None and x is None:
+            return ind1[0] + (y - ind1[1]) * (ind2[0] - ind1[0]) / (ind2[1] - ind1[1])
+        else:
+            raise ValueError('Please enter either `x` or `y`, but not both.')
+
     else:
-        raise ValueError('Please enter either `x` or `y`, but not both.')
+        if x is not None and y is None:
+            return ind1[1] + (x-ind1[0])*(ind2[1]-ind1[1])/(ind2[0]-ind1[0])
+        elif y is not None and x is None:
+            return ind1[0] + (y-ind1[1])*(ind2[0]-ind1[0])/(ind2[1]-ind1[1])
+        else:
+            raise ValueError('Please enter either `x` or `y`, but not both.')
 
 
 def align_trace(x: np.ndarray, y: np.ndarray, xrange: Tuple[float, float], align_value: float):
@@ -1055,6 +1104,7 @@ def count_bool_groups(bool_arr: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 def even_ext(arr: np.ndarray, n: int) -> np.ndarray:
     """
     Extends array with n elements, by mirroring values adjacent to the edges
+
     Parameters
     ----------
     arr: np.ndarray
@@ -1064,10 +1114,13 @@ def even_ext(arr: np.ndarray, n: int) -> np.ndarray:
 
     Returns
     -------
+    `~numpy.array`
 
     Examples
+    --------
     >>> even_ext(np.array([0, 1, 2, 3, 4, 5, 6, 7]), 2)
     array([2, 1, 0, 1, 2, 3, 4, 5, 6, 7, 6, 5])
+
     """
     left_ext = arr[n:0:-1]
     right_ext = arr[-n-1:-1][::-1]
@@ -1087,6 +1140,7 @@ def mov_avg(arr, win_size, step_size, avg_type: callable = np.mean):
 def log_avg(arr: np.ndarray, **kwargs) -> np.ndarray:
     """
     Calculates the avg of arr on a log scale
+
     Parameters
     ----------
     arr: np.ndarray
@@ -1095,7 +1149,8 @@ def log_avg(arr: np.ndarray, **kwargs) -> np.ndarray:
 
     Returns
     -------
-    np.ndarray
+    `~numpy.ndarray`
+
     """
     return 10**np.mean(np.log10(arr), **kwargs)
 

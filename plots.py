@@ -493,6 +493,7 @@ def plot_ivs_scheme_one(trace_pair: TracePair, hold_trace: HoldTrace,
                         direction: str = 'push',
                         main_colors: Tuple[str, str] = ('cornflowerblue', 'indianred'),
                         accent_colors: Tuple[str, str] = ('royalblue', 'firebrick'),
+                        vline_color: str = 'grey',
                         color_list: Optional[List] = None,
                         smoothing: int = 1,
                         iv_num_xticks: int = 5,
@@ -513,6 +514,8 @@ def plot_ivs_scheme_one(trace_pair: TracePair, hold_trace: HoldTrace,
         main colors of the plots
     accent_colors : Tuple[str, str], default: ('royalblue', 'firebrick')
         accent colors used to emphasize or separate parts of plots
+    vline_color: str
+        color of the vertical lines
     color_list : Optional[List], default: None
     smoothing : int, default 1
         Amount of smoothing, the window size for moving average calculation, ie. 1 means no smoothing,
@@ -690,8 +693,14 @@ def plot_ivs_scheme_one(trace_pair: TracePair, hold_trace: HoldTrace,
     elif utils.get_exponent(max_curr) == -10:
         ax_hold.set_ylabel(r'Current [$10^{-10}\;\mathrm{A}$]', labelpad=0.5)
         ax_iv.set_ylabel(r'Current [$10^{-10}\;\mathrm{A}$]', labelpad=0.5)
+    elif utils.get_exponent(max_curr) == -5:
+        ax_hold.set_ylabel(r'Current [$10^{-5}\;\mathrm{A}$]', labelpad=0.5)
+        ax_iv.set_ylabel(r'Current [$10^{-5}\;\mathrm{A}$]', labelpad=0.5)
+    elif utils.get_exponent(max_curr) == -4:
+        ax_hold.set_ylabel(r'Current [$10^{-4}\;\mathrm{A}$]', labelpad=0.5)
+        ax_iv.set_ylabel(r'Current [$10^{-4}\;\mathrm{A}$]', labelpad=0.5)
     else:
-        raise UserWarning(f'No axis label defined for this case. Refer to plots.py line 640, to add a label'
+        raise UserWarning(f'No axis label defined for this case. Refer to plots.py line 681, to add a label'
                           f'for the case when utils.get_exponent(max_curr) = {utils.get_exponent(max_curr)}')
 
     ax_hold.xaxis.set_minor_locator(ticker.MultipleLocator(0.2))
@@ -710,15 +719,15 @@ def plot_ivs_scheme_one(trace_pair: TracePair, hold_trace: HoldTrace,
     par_hold.set_ylabel('Bias [V]')
 
     for i, interval in enumerate(psd_intervals):
-        ax_hold.axvspan(interval[0] / 50_000, interval[-1] / 50_000, color=cols[i], ec=None, alpha=0.3)
+        ax_hold.axvspan(interval[0] / 50_000, interval[-1] / 50_000, color=cols[i], ec=None, alpha=0.5)
 
         for j in interval:
-            ax_hold.axvline(j / 50_000, ls='--', c='grey', lw=0.6)
+            ax_hold.axvline(j / 50_000, ls='--', c=vline_color, lw=0.6)
 
-    ax_psd = hold_trace.plot_psds(ax=ax_psd, pull=pull, plot_legend=False, which_psds=which_psds, plot_guides=False)
+    ax_psd = hold_trace.plot_psds(ax=ax_psd, pull=pull, plot_legend=False, which_psds=which_psds, plot_guides=False,
+                                  color_list=color_list)
 
-
-    return ax_trace, ax_hold, par_hold, ax_iv, ax_psd
+    return fig, ax_trace, ax_hold, par_hold, ax_iv, ax_psd
 
 
 def plot_ivs_scheme(trace_pair: TracePair, hold_trace: HoldTrace,

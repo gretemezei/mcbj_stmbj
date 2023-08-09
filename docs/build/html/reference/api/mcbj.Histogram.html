@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>mcbj.Histogram &#8212; MCBJ STM-BJ 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=e031e9a9"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="mcbj.Histogram.calc_corr_hist_2d" href="mcbj.Histogram.calc_corr_hist_2d.html" />
+    <link rel="prev" title="mcbj.TracePair.plot_trace_pair" href="mcbj.TracePair.plot_trace_pair.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="mcbj-histogram">
+<h1>mcbj.Histogram<a class="headerlink" href="#mcbj-histogram" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="mcbj.Histogram">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mcbj.</span></span><span class="sig-name descname"><span class="pre">Histogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_from</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_trace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_trace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conductance_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(1e-06,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conductance_bins_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conductance_log_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conductance_bins_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'total'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mcbj.Histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for statistical analysis of break junction traces</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>folder</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Path</span></code></a></span></dt><dd><p>path to reach files containing the data</p>
+</dd>
+<dt><strong>load_from</strong><span class="classifier">str, <a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Path</span></code></a></span></dt><dd><p>file name or file path to load the histogram from</p>
+</dd>
+<dt><strong>start_trace</strong><span class="classifier">int</span></dt><dd><p>1st trace for statistical analysis</p>
+</dd>
+<dt><strong>end_trace</strong><span class="classifier">int</span></dt><dd><p>last trace for statistical analysis</p>
+</dd>
+<dt><strong>conductance_range</strong><span class="classifier">Tuple[float, float]</span></dt><dd></dd>
+<dt><strong>conductance_bins_num</strong><span class="classifier">int</span></dt><dd><p>number of bins</p>
+</dd>
+<dt><strong>conductance_log_scale</strong><span class="classifier">bool</span></dt><dd></dd>
+<dt><strong>conductance_bins_mode</strong><span class="classifier">str</span></dt><dd></dd>
+<dt><strong>align_at</strong><span class="classifier">float</span></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>folder</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Path</span></code></a></span></dt><dd><p>path to reach files containing the data</p>
+</dd>
+<dt><strong>start_trace</strong><span class="classifier">int</span></dt><dd><p>trace number of 1st trace taken in the statistics</p>
+</dd>
+<dt><strong>end_trace</strong><span class="classifier">int</span></dt><dd><p>trace number of last trace taken in the statistics</p>
+</dd>
+<dt><strong>traces</strong><span class="classifier">np.ndarray</span></dt><dd><p>array of trace numbers that the histogram is calculated from</p>
+</dd>
+<dt><strong>conductance_range</strong><span class="classifier">Tuple[float, float]</span></dt><dd><p>conductance range for the calculation of the statistics</p>
+</dd>
+<dt><strong>conductance_bins_num</strong><span class="classifier">np.ndarray</span></dt><dd><p>bins constructed to calculate 1d histograms</p>
+</dd>
+<dt><strong>conductance_log_scale</strong><span class="classifier">bool</span></dt><dd><p>if True, conductance axis is set to log scale and the histograms are calculated log binned</p>
+</dd>
+<dt><strong>temporal_hist_pull</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>temporal histogram from individual 1d conductance histograms of pull traces</p>
+</dd>
+<dt><strong>temporal_hist_push</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>temporal histogram from individual 1d conductance histograms of push traces</p>
+</dd>
+<dt><strong>plateau_length_pull</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>length of the selected plateau in points or in V for each pull trace</p>
+</dd>
+<dt><strong>plateau_length_push</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>length of the selected plateau in points or in V for each push trace</p>
+</dd>
+<dt><strong>hist_plateau_length_bins</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>location of bins of the plateau length histogram</p>
+</dd>
+<dt><strong>hist_plateau_length_pull</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>counts of the plateau length histogram of pull traces</p>
+</dd>
+<dt><strong>hist_plateau_length_push</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>counts of the plateau length histogram of push traces</p>
+</dd>
+<dt><strong>hist_1d_bins</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>location bins of the conductance histogram</p>
+</dd>
+<dt><strong>hist_1d_pull</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>counts of the conductance histogram of pull traces</p>
+</dd>
+<dt><strong>hist_1d_push</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>counts of the conductance histogram of push traces</p>
+</dd>
+<dt><strong>align_at</strong><span class="classifier">float</span></dt><dd><p>conductance value where the traces are aligned for the calculation of 2d conductance histograms</p>
+</dd>
+<dt><strong>hist_2d_xmesh_pull</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>horizontal coordinates for the points of 2d histogram of the pull direction</p>
+</dd>
+<dt><strong>hist_2d_ymesh_pull</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>vertical coordinates for the points of 2d histogram of the pull direction</p>
+</dd>
+<dt><strong>hist_2d_pull</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>counts of the 2d histogram from pull traces</p>
+</dd>
+<dt><strong>hist_2d_xmesh_push</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>horizontal coordinates for the points of 2d histogram of the push direction</p>
+</dd>
+<dt><strong>hist_2d_ymesh_push</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>vertical coordinates for the points of 2d histogram of the push direction</p>
+</dd>
+<dt><strong>hist_2d_push</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>counts of the 2d histogram from push traces</p>
+</dd>
+<dt><strong>color_pull</strong><span class="classifier">str</span></dt><dd><p>color for the pull histogram</p>
+</dd>
+<dt><strong>color_push</strong><span class="classifier">str</span></dt><dd><p>color for the push histogram</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.calc_corr_hist_2d.html#mcbj.Histogram.calc_corr_hist_2d" title="mcbj.Histogram.calc_corr_hist_2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_corr_hist_2d</span></code></a>()</p></td>
+<td><p>Calculate correlation matrix</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.Histogram.calc_hist_1d.html#mcbj.Histogram.calc_hist_1d" title="mcbj.Histogram.calc_hist_1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_hist_1d</span></code></a>()</p></td>
+<td><p>Calculate 1d conductance histogram based on the parameters provided for the defined Histogram object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.calc_hist_2d.html#mcbj.Histogram.calc_hist_2d" title="mcbj.Histogram.calc_hist_2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_hist_2d</span></code></a>(align_at[, interpolate, ...])</p></td>
+<td><p>Calculate 2d conductance-displacement histogram for pull and push traces aligned at the conductance value <em>align_at</em> in the displacement range <em>range_pull</em> and <em>range_push</em>, respectively</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.Histogram.calc_plateau_length_hist.html#mcbj.Histogram.calc_plateau_length_hist" title="mcbj.Histogram.calc_plateau_length_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_plateau_length_hist</span></code></a>([xrange, xbins])</p></td>
+<td><p>Calculate plateau length histograms</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.calc_stats.html#mcbj.Histogram.calc_stats" title="mcbj.Histogram.calc_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_stats</span></code></a>(align_at[, interpolate, ...])</p></td>
+<td><p>Perform all statistical analysis in one iteration</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.Histogram.calc_temporal_hist.html#mcbj.Histogram.calc_temporal_hist" title="mcbj.Histogram.calc_temporal_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_temporal_hist</span></code></a>()</p></td>
+<td><p>Calculate single conductance 1d histogram for each included trace, and collect them to create a temporal histogram of the break junction traces</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.load_histogram.html#mcbj.Histogram.load_histogram" title="mcbj.Histogram.load_histogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_histogram</span></code></a>(fname)</p></td>
+<td><p>Load histogram from file <code class="xref py py-obj docutils literal notranslate"><span class="pre">fname</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.Histogram.plot_corr.html#mcbj.Histogram.plot_corr" title="mcbj.Histogram.plot_corr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_corr</span></code></a>([mode, dpi])</p></td>
+<td><p>Plot correlation histogram</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.plot_example_traces.html#mcbj.Histogram.plot_example_traces" title="mcbj.Histogram.plot_example_traces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_example_traces</span></code></a>(traces, shift[, ax, ...])</p></td>
+<td><p>Plot selected trace(s) <code class="xref py py-obj docutils literal notranslate"><span class="pre">traces</span></code> as example in one plot</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.Histogram.plot_hist_1d.html#mcbj.Histogram.plot_hist_1d" title="mcbj.Histogram.plot_hist_1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_hist_1d</span></code></a>([ax, direction, ylims, ...])</p></td>
+<td><p>Plot 1d conductance histogram, and add annotations</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.plot_hist_2d_both.html#mcbj.Histogram.plot_hist_2d_both" title="mcbj.Histogram.plot_hist_2d_both"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_hist_2d_both</span></code></a>([dpi])</p></td>
+<td><p>Plot both pull and push 2d conductance-displacement histograms</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.Histogram.plot_hist_2d_one.html#mcbj.Histogram.plot_hist_2d_one" title="mcbj.Histogram.plot_hist_2d_one"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_hist_2d_one</span></code></a>([direction, ax, dpi])</p></td>
+<td><p>Plot 2d conductance-displacement histogram for 'pull' or 'push' traces defined by the <em>direction</em> parameter</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.plot_plateau_length_hist.html#mcbj.Histogram.plot_plateau_length_hist" title="mcbj.Histogram.plot_plateau_length_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_plateau_length_hist</span></code></a>([ax, ylims, ...])</p></td>
+<td><p>Plot plateau length histograms</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.Histogram.plot_temporal_hist.html#mcbj.Histogram.plot_temporal_hist" title="mcbj.Histogram.plot_temporal_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_temporal_hist</span></code></a>([ax, add_hlines, ...])</p></td>
+<td><p>Plot temporal histograms</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.save_histogram.html#mcbj.Histogram.save_histogram" title="mcbj.Histogram.save_histogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_histogram</span></code></a>(fname)</p></td>
+<td><p>Saves histogram to h5 file</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>calc_plateau_lengths</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>calc_time_until_hold_hist</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>plot_time_until_hold_hist</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="mcbj.Histogram.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_from</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_trace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_trace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conductance_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(1e-06,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conductance_bins_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conductance_log_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conductance_bins_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'total'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mcbj.Histogram.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mcbj.Histogram.__init__" title="mcbj.Histogram.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(folder[, load_from, traces, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.Histogram.calc_corr_hist_2d.html#mcbj.Histogram.calc_corr_hist_2d" title="mcbj.Histogram.calc_corr_hist_2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_corr_hist_2d</span></code></a>()</p></td>
+<td><p>Calculate correlation matrix</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.calc_hist_1d.html#mcbj.Histogram.calc_hist_1d" title="mcbj.Histogram.calc_hist_1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_hist_1d</span></code></a>()</p></td>
+<td><p>Calculate 1d conductance histogram based on the parameters provided for the defined Histogram object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.Histogram.calc_hist_2d.html#mcbj.Histogram.calc_hist_2d" title="mcbj.Histogram.calc_hist_2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_hist_2d</span></code></a>(align_at[, interpolate, ...])</p></td>
+<td><p>Calculate 2d conductance-displacement histogram for pull and push traces aligned at the conductance value <em>align_at</em> in the displacement range <em>range_pull</em> and <em>range_push</em>, respectively</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.calc_plateau_length_hist.html#mcbj.Histogram.calc_plateau_length_hist" title="mcbj.Histogram.calc_plateau_length_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_plateau_length_hist</span></code></a>([xrange, xbins])</p></td>
+<td><p>Calculate plateau length histograms</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_plateau_lengths</span></code>([low_bound_pull, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.calc_stats.html#mcbj.Histogram.calc_stats" title="mcbj.Histogram.calc_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_stats</span></code></a>(align_at[, interpolate, ...])</p></td>
+<td><p>Perform all statistical analysis in one iteration</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.Histogram.calc_temporal_hist.html#mcbj.Histogram.calc_temporal_hist" title="mcbj.Histogram.calc_temporal_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_temporal_hist</span></code></a>()</p></td>
+<td><p>Calculate single conductance 1d histogram for each included trace, and collect them to create a temporal histogram of the break junction traces</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_time_until_hold_hist</span></code>([xrange, xbins])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.Histogram.load_histogram.html#mcbj.Histogram.load_histogram" title="mcbj.Histogram.load_histogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_histogram</span></code></a>(fname)</p></td>
+<td><p>Load histogram from file <code class="xref py py-obj docutils literal notranslate"><span class="pre">fname</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.plot_corr.html#mcbj.Histogram.plot_corr" title="mcbj.Histogram.plot_corr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_corr</span></code></a>([mode, dpi])</p></td>
+<td><p>Plot correlation histogram</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.Histogram.plot_example_traces.html#mcbj.Histogram.plot_example_traces" title="mcbj.Histogram.plot_example_traces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_example_traces</span></code></a>(traces, shift[, ax, ...])</p></td>
+<td><p>Plot selected trace(s) <code class="xref py py-obj docutils literal notranslate"><span class="pre">traces</span></code> as example in one plot</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.plot_hist_1d.html#mcbj.Histogram.plot_hist_1d" title="mcbj.Histogram.plot_hist_1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_hist_1d</span></code></a>([ax, direction, ylims, ...])</p></td>
+<td><p>Plot 1d conductance histogram, and add annotations</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.Histogram.plot_hist_2d_both.html#mcbj.Histogram.plot_hist_2d_both" title="mcbj.Histogram.plot_hist_2d_both"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_hist_2d_both</span></code></a>([dpi])</p></td>
+<td><p>Plot both pull and push 2d conductance-displacement histograms</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.plot_hist_2d_one.html#mcbj.Histogram.plot_hist_2d_one" title="mcbj.Histogram.plot_hist_2d_one"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_hist_2d_one</span></code></a>([direction, ax, dpi])</p></td>
+<td><p>Plot 2d conductance-displacement histogram for 'pull' or 'push' traces defined by the <em>direction</em> parameter</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.Histogram.plot_plateau_length_hist.html#mcbj.Histogram.plot_plateau_length_hist" title="mcbj.Histogram.plot_plateau_length_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_plateau_length_hist</span></code></a>([ax, ylims, ...])</p></td>
+<td><p>Plot plateau length histograms</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.plot_temporal_hist.html#mcbj.Histogram.plot_temporal_hist" title="mcbj.Histogram.plot_temporal_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_temporal_hist</span></code></a>([ax, add_hlines, ...])</p></td>
+<td><p>Plot temporal histograms</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_time_until_hold_hist</span></code>([ax, ylims, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.Histogram.save_histogram.html#mcbj.Histogram.save_histogram" title="mcbj.Histogram.save_histogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_histogram</span></code></a>(fname)</p></td>
+<td><p>Saves histogram to h5 file</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">MCBJ STM-BJ</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../mcbj.html">Break Junction and Hold measurement analysis</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../mcbj.html#break-junction-trace-pairs">Break Junction Trace Pairs</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../mcbj.html#break-junction-histograms">Break Junction Histograms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mcbj.html#hold-trace-analysis">Hold Trace Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mcbj.html#noise-analysis">Noise Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pca_and_ml.html">Principal Component Analysis and PCA-based selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plots.html">Complex plot functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">Utility functions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../mcbj.html">Break Junction and Hold measurement analysis</a><ul>
+      <li>Previous: <a href="mcbj.TracePair.plot_trace_pair.html" title="previous chapter">mcbj.TracePair.plot_trace_pair</a></li>
+      <li>Next: <a href="mcbj.Histogram.calc_corr_hist_2d.html" title="next chapter">mcbj.Histogram.calc_corr_hist_2d</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Greta Mezei.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../../_sources/reference/api/mcbj.Histogram.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

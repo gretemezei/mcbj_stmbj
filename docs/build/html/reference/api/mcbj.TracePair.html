@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>mcbj.TracePair &#8212; MCBJ STM-BJ 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=e031e9a9"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="mcbj.TracePair.calc_plateau_length" href="mcbj.TracePair.calc_plateau_length.html" />
+    <link rel="prev" title="Break Junction and Hold measurement analysis" href="../mcbj.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="mcbj-tracepair">
+<h1>mcbj.TracePair<a class="headerlink" href="#mcbj-tracepair" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="mcbj.TracePair">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mcbj.</span></span><span class="sig-name descname"><span class="pre">TracePair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_from</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">File</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_bound_pull</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high_bound_pull</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_bound_push</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high_bound_push</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mcbj.TracePair" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to represent a break junction trace pair</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>trace</strong><span class="classifier">int or str</span></dt><dd><p>trace number or trace name to work with</p>
+</dd>
+<dt><strong>load_from</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Path</span></code></a> or <a class="reference external" href="https://docs.h5py.org/en/stable/high/file.html#h5py.File" title="(in h5py v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">File</span></code></a></span></dt><dd><p>path to the file or an opened for read file instance to load data from</p>
+</dd>
+<dt><strong>low_bound_pull</strong><span class="classifier">float</span></dt><dd><p>low bound value to find plateau and calculate plateau length</p>
+</dd>
+<dt><strong>high_bound_pull</strong><span class="classifier">float</span></dt><dd><p>high bound value to find plateau and calculate plateau length</p>
+</dd>
+<dt><strong>low_bound_push</strong><span class="classifier">float</span></dt><dd><p>low bound value to find plateau and calculate plateau length</p>
+</dd>
+<dt><strong>high_bound_push</strong><span class="classifier">float</span></dt><dd><p>high bound value to find plateau and calculate plateau length</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>trace_num</strong><span class="classifier">int</span></dt><dd><p>number of the trace</p>
+</dd>
+<dt><strong>trace_name</strong><span class="classifier">str</span></dt><dd><p>name of the trace used as the key, format: ‘trace_{trace_num}’</p>
+</dd>
+<dt><strong>conductance_pull</strong><span class="classifier">np.ndarray</span></dt><dd><p>Conductance values for the pull direction in <span class="math notranslate nohighlight">\(G_{0}\)</span> units</p>
+</dd>
+<dt><strong>conductance_push</strong><span class="classifier">np.ndarray</span></dt><dd><p>Conductance values for the push direction in <span class="math notranslate nohighlight">\(G_{0}\)</span> units</p>
+</dd>
+<dt><strong>piezo_pull</strong><span class="classifier">np.ndarray</span></dt><dd><p>Piezo values for the pull direction in V</p>
+</dd>
+<dt><strong>piezo_push</strong><span class="classifier">np.ndarray</span></dt><dd><p>Piezo values for the push direction</p>
+</dd>
+<dt><strong>dz_pull</strong><span class="classifier">float</span></dt><dd><p>piezo change step size during breaking process</p>
+</dd>
+<dt><strong>dz_push</strong><span class="classifier">float</span></dt><dd><p>piezo change step size during closing process</p>
+</dd>
+<dt><strong>z0_pull</strong><span class="classifier">float</span></dt><dd><p>initial value of voltage applied to piezo when the breaking process started</p>
+</dd>
+<dt><strong>z0_push</strong><span class="classifier">float</span></dt><dd><p>initial value of voltage applied to piezo when the closing process started</p>
+</dd>
+<dt><strong>R_parallel</strong><span class="classifier">float</span></dt><dd><p>resistance of the resistor connected in parallel to the sample</p>
+</dd>
+<dt><strong>R_serial</strong><span class="classifier">float</span></dt><dd><p>resistance of the resistor connected in series to the sample</p>
+</dd>
+<dt><strong>gain</strong><span class="classifier">float</span></dt><dd><p>set gain for the current amplifier</p>
+</dd>
+<dt><strong>bias_mv</strong><span class="classifier">float</span></dt><dd><p>set bias value for the measurement in mV</p>
+</dd>
+<dt><strong>rate</strong><span class="classifier">float</span></dt><dd><p>set speed to change piezo value in V</p>
+</dd>
+<dt><strong>sample_rate</strong><span class="classifier">float</span></dt><dd><p>set sample rate of the measurement in Hz</p>
+</dd>
+<dt><strong>G_limit_pull</strong><span class="classifier">float</span></dt><dd><p>low conductance limit to stop the breaking process and turn around</p>
+</dd>
+<dt><strong>G_limit_push</strong><span class="classifier">float</span></dt><dd><p>high conductance limit to stop closing process and turn around</p>
+</dd>
+<dt><strong>distance_pull</strong><span class="classifier">float</span></dt><dd><p>total distance pulled</p>
+</dd>
+<dt><strong>distance_push</strong><span class="classifier">float</span></dt><dd><p>total distance pushed</p>
+</dd>
+<dt><strong>excursion_pull</strong><span class="classifier">float</span></dt><dd><p>extra distance to pull after reaching low conductance limit</p>
+</dd>
+<dt><strong>excursion_push</strong><span class="classifier">float</span></dt><dd><p>extra distance to pull after reaching high conductance limit</p>
+</dd>
+<dt><strong>hold_excursion_pull</strong><span class="classifier">float</span></dt><dd><p>extra distance to pull after reaching conductance limit for hold measurement</p>
+</dd>
+<dt><strong>hold_excursion_push</strong><span class="classifier">float</span></dt><dd><p>extra distance to pull after reaching conductance limit for hold measurement</p>
+</dd>
+<dt><strong>speed_pull</strong></dt><dd><p>speed to change piezo value, based on set rate</p>
+</dd>
+<dt><strong>speed_push</strong></dt><dd><p>speed to change piezo value, based on set rate</p>
+</dd>
+<dt><strong>low_bound_pull</strong><span class="classifier">float</span></dt><dd><p>low bound value to find plateau and calculate plateau length</p>
+</dd>
+<dt><strong>high_bound_pull</strong><span class="classifier">float</span></dt><dd><p>high bound value to find plateau and calculate plateau length</p>
+</dd>
+<dt><strong>low_bound_push</strong><span class="classifier">float</span></dt><dd><p>low bound value to find plateau and calculate plateau length</p>
+</dd>
+<dt><strong>high_bound_push</strong><span class="classifier">float</span></dt><dd><p>high bound value to find plateau and calculate plateau length</p>
+</dd>
+<dt><strong>plateau_length_pull</strong><span class="classifier">int or float</span></dt><dd><p>plateau length of the plateau defined by <code class="xref py py-obj docutils literal notranslate"><span class="pre">low_bound_pull</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">high_bound_pull</span></code> values for the pull trace</p>
+</dd>
+<dt><strong>plateau_length_push</strong><span class="classifier">int or float</span></dt><dd><p>plateau length of the plateau defined by <code class="xref py py-obj docutils literal notranslate"><span class="pre">low_bound_push</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">high_bound_push</span></code> values for the push trace</p>
+</dd>
+<dt><strong>plateau_range_pull</strong><span class="classifier">Tuple[int, int]</span></dt><dd><p>starting and ending point of the plateau defined by <code class="xref py py-obj docutils literal notranslate"><span class="pre">low_bound_pull</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">high_bound_pull</span></code> for the pull trace</p>
+</dd>
+<dt><strong>plateau_range_push</strong><span class="classifier">Tuple[int, int]</span></dt><dd><p>starting and ending point of the plateau defined by <code class="xref py py-obj docutils literal notranslate"><span class="pre">low_bound_push</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">high_bound_push</span></code> for the push trace</p>
+</dd>
+<dt><strong>hold_set_pull</strong><span class="classifier">float</span></dt><dd><p>set conductance value where breaking process is stopped to perform hold measurement</p>
+</dd>
+<dt><strong>hold_set_push</strong><span class="classifier">float</span></dt><dd><p>set conductance value where closing process is stopped to perform hold measurement</p>
+</dd>
+<dt><strong>hold_index_pull</strong><span class="classifier">int</span></dt><dd><p>index of the point where the hold measurement started in the pull direction,
+if there was no hold measurement for the trace, this value defaults to None or -1 CHECK!!!</p>
+</dd>
+<dt><strong>hold_index_push</strong><span class="classifier">int</span></dt><dd><p>index of the point where the hold measurement started in the push direction,
+if there was no hold measurement for the trace, this value defaults to None</p>
+</dd>
+<dt><strong>hold_conductance_pull</strong><span class="classifier">float</span></dt><dd><p>conductance value at index <code class="xref py py-obj docutils literal notranslate"><span class="pre">hold_index_pull</span></code></p>
+</dd>
+<dt><strong>hold_conductance_push</strong><span class="classifier">float</span></dt><dd><p>conductance value at index <code class="xref py py-obj docutils literal notranslate"><span class="pre">hold_index_push</span></code></p>
+</dd>
+<dt><strong>f_pull</strong></dt><dd></dd>
+<dt><strong>t_pull</strong></dt><dd></dd>
+<dt><strong>Zxx_pull</strong></dt><dd></dd>
+<dt><strong>cond_avg_pull</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.TracePair.calc_plateau_length.html#mcbj.TracePair.calc_plateau_length" title="mcbj.TracePair.calc_plateau_length"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_plateau_length</span></code></a>([low_bound_pull, ...])</p></td>
+<td><p>Calculates plateau length in the given range.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.TracePair.load_trace_pair.html#mcbj.TracePair.load_trace_pair" title="mcbj.TracePair.load_trace_pair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_trace_pair</span></code></a>(bj_file)</p></td>
+<td><p>Loads the pull-push trace pair defined by <code class="xref py py-obj docutils literal notranslate"><span class="pre">TracePair.trace_num</span></code> from <code class="xref py py-obj docutils literal notranslate"><span class="pre">TracePair.file_path</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.TracePair.plot_trace_pair.html#mcbj.TracePair.plot_trace_pair" title="mcbj.TracePair.plot_trace_pair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_trace_pair</span></code></a>([ax, x_val, aligned, ylim, ...])</p></td>
+<td><p>Plot the loaded pull-push trace pair</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>align_trace</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>fit_tunnel</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="mcbj.TracePair.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_from</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">File</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_bound_pull</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high_bound_pull</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_bound_push</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high_bound_push</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#mcbj.TracePair.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mcbj.TracePair.__init__" title="mcbj.TracePair.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(trace, load_from[, low_bound_pull, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">align_trace</span></code>([align_at, interpolate])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.TracePair.calc_plateau_length.html#mcbj.TracePair.calc_plateau_length" title="mcbj.TracePair.calc_plateau_length"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_plateau_length</span></code></a>([low_bound_pull, ...])</p></td>
+<td><p>Calculates plateau length in the given range.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_tunnel</span></code>([conductance_range, direction, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mcbj.TracePair.load_trace_pair.html#mcbj.TracePair.load_trace_pair" title="mcbj.TracePair.load_trace_pair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_trace_pair</span></code></a>(bj_file)</p></td>
+<td><p>Loads the pull-push trace pair defined by <code class="xref py py-obj docutils literal notranslate"><span class="pre">TracePair.trace_num</span></code> from <code class="xref py py-obj docutils literal notranslate"><span class="pre">TracePair.file_path</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="mcbj.TracePair.plot_trace_pair.html#mcbj.TracePair.plot_trace_pair" title="mcbj.TracePair.plot_trace_pair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_trace_pair</span></code></a>([ax, x_val, aligned, ylim, ...])</p></td>
+<td><p>Plot the loaded pull-push trace pair</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">MCBJ STM-BJ</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../mcbj.html">Break Junction and Hold measurement analysis</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../mcbj.html#break-junction-trace-pairs">Break Junction Trace Pairs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mcbj.html#break-junction-histograms">Break Junction Histograms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mcbj.html#hold-trace-analysis">Hold Trace Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mcbj.html#noise-analysis">Noise Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pca_and_ml.html">Principal Component Analysis and PCA-based selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plots.html">Complex plot functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">Utility functions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../mcbj.html">Break Junction and Hold measurement analysis</a><ul>
+      <li>Previous: <a href="../mcbj.html" title="previous chapter">Break Junction and Hold measurement analysis</a></li>
+      <li>Next: <a href="mcbj.TracePair.calc_plateau_length.html" title="next chapter">mcbj.TracePair.calc_plateau_length</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Greta Mezei.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../../_sources/reference/api/mcbj.TracePair.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

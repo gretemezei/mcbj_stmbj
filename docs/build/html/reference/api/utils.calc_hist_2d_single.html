@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>utils.calc_hist_2d_single &#8212; MCBJ STM-BJ 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=e031e9a9"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="utils.interpolate" href="utils.interpolate.html" />
+    <link rel="prev" title="utils.calc_hist_1d_single" href="utils.calc_hist_1d_single.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="utils-calc-hist-2d-single">
+<h1>utils.calc_hist_2d_single<a class="headerlink" href="#utils-calc-hist-2d-single" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.calc_hist_2d_single">
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">calc_hist_2d_single</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">xrange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_scale_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yrange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(1e-06,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_scale_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_bins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(100,</span> <span class="pre">100)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_mode_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_mode_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.calc_hist_2d_single" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates a single 2d histogram from arrays <em>x</em> and <em>y</em> in the range <em>xrange</em></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">np.ndarray</span></dt><dd><p>values of the horizontal axis</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">np.ndarray</span></dt><dd><p>values of the vertical axis</p>
+</dd>
+<dt><strong>xrange</strong><span class="classifier">Tuple[float, float]</span></dt><dd><p>horizontal range of bins</p>
+</dd>
+<dt><strong>log_scale_x</strong><span class="classifier">bool, default: False</span></dt><dd><p>if True, the scaling of the horizontal axis is logarithmic</p>
+</dd>
+<dt><strong>yrange</strong><span class="classifier">Tuple[float, float]</span></dt><dd><p>vertical range of bins</p>
+</dd>
+<dt><strong>log_scale_y</strong><span class="classifier">bool, default: True</span></dt><dd><p>if True, the scaling of the vertical axis is logarithmic</p>
+</dd>
+<dt><strong>num_bins</strong><span class="classifier">Tuple[int, int]</span></dt><dd><p>number of bins along the horizontal, and vertical axis,
+if the scaling is set to logarithmic for the corresponding axis, then it is the number of bins per decade</p>
+</dd>
+<dt><strong>bin_mode_x</strong><span class="classifier">Optional, str, default value: None</span></dt><dd><p>only valid when log_scale_x is True
+mode of definition of the bins: ‘decade’: num_bins[0] means the number of bins in a decade
+‘total’: num_bins[0] means the total number of bins
+if log_scale_x is True and bin_mode_x is None, the value defaults to ‘decade’</p>
+</dd>
+<dt><strong>bin_mode_y</strong><span class="classifier">Optional, str, default value: None</span></dt><dd><p>only valid when log_scale_y is True
+mode of definition of the bins: ‘decade’: num_bins[1] means the number of bins in a decade
+‘total’: num_bins[1] means the total number of bins
+if log_scale_y is True and bin_mode_y is None, the value defaults to ‘decade’</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>x_mesh</strong><span class="classifier">np.ndarray</span></dt><dd><p>coordinate matrix containing the x coordinates of each bin</p>
+</dd>
+<dt><strong>y_mesh</strong><span class="classifier">np.ndarray</span></dt><dd><p>coordinate matrix containing the y coordinates of each bin</p>
+</dd>
+<dt><strong>h</strong><span class="classifier">np.ndarray</span></dt><dd><p>counts at each bin (shape: (number of bins along x, number of bins along y))</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">MCBJ STM-BJ</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../mcbj.html">Break Junction and Hold measurement analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pca_and_ml.html">Principal Component Analysis and PCA-based selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plots.html">Complex plot functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../utils.html">Utility functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../utils.html#converters">Converters</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../utils.html#calculations">Calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html#file-handling">File handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html#fit-functions">Fit Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html#miscellaneous">Miscellaneous</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../utils.html">Utility functions</a><ul>
+      <li>Previous: <a href="utils.calc_hist_1d_single.html" title="previous chapter">utils.calc_hist_1d_single</a></li>
+      <li>Next: <a href="utils.interpolate.html" title="next chapter">utils.interpolate</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Greta Mezei.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../../_sources/reference/api/utils.calc_hist_2d_single.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

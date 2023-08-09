@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>utils.check_date &#8212; MCBJ STM-BJ 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=e031e9a9"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="utils.count_bool_groups" href="utils.count_bool_groups.html" />
+    <link rel="prev" title="utils.execute_and_measure_time" href="utils.execute_and_measure_time.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="utils-check-date">
+<h1>utils.check_date<a class="headerlink" href="#utils-check-date" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.check_date">
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">check_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.check_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a date is formatted right</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>date</strong><span class="classifier">str</span></dt><dd><p>date string to check formatting</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">check_date</span><span class="p">(</span><span class="s1">&#39;21_12_08&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">check_date</span><span class="p">(</span><span class="s1">&#39;2021_12_08&#39;</span><span class="p">)</span>
+<span class="go">ValueError: Invalid date format. Enter the date in the following format: &#39;yy_mm_dd&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">MCBJ STM-BJ</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../mcbj.html">Break Junction and Hold measurement analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pca_and_ml.html">Principal Component Analysis and PCA-based selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plots.html">Complex plot functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../utils.html">Utility functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../utils.html#converters">Converters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html#calculations">Calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html#file-handling">File handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html#fit-functions">Fit Functions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../utils.html#miscellaneous">Miscellaneous</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../utils.html">Utility functions</a><ul>
+      <li>Previous: <a href="utils.execute_and_measure_time.html" title="previous chapter">utils.execute_and_measure_time</a></li>
+      <li>Next: <a href="utils.count_bool_groups.html" title="next chapter">utils.count_bool_groups</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Greta Mezei.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../../_sources/reference/api/utils.check_date.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

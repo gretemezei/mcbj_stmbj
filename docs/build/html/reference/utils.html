@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Utility functions &#8212; MCBJ STM-BJ 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=e031e9a9"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="utils.convert_g0_to_ohm" href="api/utils.convert_g0_to_ohm.html" />
+    <link rel="prev" title="Complex plot functions" href="plots.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="utility-functions">
+<h1>Utility functions<a class="headerlink" href="#utility-functions" title="Permalink to this heading">¶</a></h1>
+<section id="converters">
+<h2>Converters<a class="headerlink" href="#converters" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.convert_g0_to_ohm.html#utils.convert_g0_to_ohm" title="utils.convert_g0_to_ohm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_g0_to_ohm</span></code></a>(conductance)</p></td>
+<td><p>Converts conductance in units of <span class="math notranslate nohighlight">\(G_{0}\)</span> to resistance in Ohm</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.convert_ohm_to_g0.html#utils.convert_ohm_to_g0" title="utils.convert_ohm_to_g0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_ohm_to_g0</span></code></a>(resistance)</p></td>
+<td><p>Converts conductance in units of <span class="math notranslate nohighlight">\(G_{0}\)</span> to resistance in Ohm</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.convert_pt_to_sec.html#utils.convert_pt_to_sec" title="utils.convert_pt_to_sec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_pt_to_sec</span></code></a>(value_pt, sample_rate)</p></td>
+<td><p>Converts points to seconds using the sample rate of the measurement</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.convert_sec_to_pt.html#utils.convert_sec_to_pt" title="utils.convert_sec_to_pt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_sec_to_pt</span></code></a>(value_sec, sample_rate)</p></td>
+<td><p>Converts seconds to points using the sample rate of the measurement</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.convert_to_block_and_trace_num.html#utils.convert_to_block_and_trace_num" title="utils.convert_to_block_and_trace_num"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_to_block_and_trace_num</span></code></a>(trace)</p></td>
+<td><p>Determines the block and trace numbers from the entered overall trace number</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.convert_to_trace.html#utils.convert_to_trace" title="utils.convert_to_trace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_to_trace</span></code></a>(block_num, trace_num)</p></td>
+<td><p>Calculates the trace number from all traces using the block number and the trace number in the given block</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.convert_current_noise_to_conductance.html#utils.convert_current_noise_to_conductance" title="utils.convert_current_noise_to_conductance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_current_noise_to_conductance</span></code></a>(...)</p></td>
+<td><p>Converts current noise to conductance noise</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.cm2inch.html#utils.cm2inch" title="utils.cm2inch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cm2inch</span></code></a>(*tupl)</p></td>
+<td><p>Converts cm to inch (mostly used for figsize)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.point2inch.html#utils.point2inch" title="utils.point2inch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">point2inch</span></code></a>(*tupl)</p></td>
+<td><p>Converts cm to inch (mostly used for figsize)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="calculations">
+<h2>Calculations<a class="headerlink" href="#calculations" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.calculate_conductance_g0.html#utils.calculate_conductance_g0" title="utils.calculate_conductance_g0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_conductance_g0</span></code></a>(bias_v, current[, ...])</p></td>
+<td><p>Calculates the conductance in units of the conductance quantum <span class="math notranslate nohighlight">\(G_{0} = \frac{1}{12900\;\mathrm{Ohm}}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.calculate_resistance_r0.html#utils.calculate_resistance_r0" title="utils.calculate_resistance_r0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_resistance_r0</span></code></a>(bias_v, current_a)</p></td>
+<td><p>Calculates the resistance in units of the resistance quantum <span class="math notranslate nohighlight">\(R_{0} = 12900\;\mathrm{Ohm}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.calculate_resistance_ohm.html#utils.calculate_resistance_ohm" title="utils.calculate_resistance_ohm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_resistance_ohm</span></code></a>(bias_v, current_a)</p></td>
+<td><p>Calculates the resistance in units of Ohm</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.get_exponent.html#utils.get_exponent" title="utils.get_exponent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_exponent</span></code></a>(num)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.moving_average.html#utils.moving_average" title="utils.moving_average"><code class="xref py py-obj docutils literal notranslate"><span class="pre">moving_average</span></code></a>(x, w)</p></td>
+<td><p>Calculates the moving average of array <code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code> with a window size <code class="xref py py-obj docutils literal notranslate"><span class="pre">w</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.log_avg.html#utils.log_avg" title="utils.log_avg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_avg</span></code></a>(arr, **kwargs)</p></td>
+<td><p>Calculates the avg of arr on a log scale</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.round_bias_steps.html#utils.round_bias_steps" title="utils.round_bias_steps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">round_bias_steps</span></code></a>(bias_steps)</p></td>
+<td><p>Transforms bias to mV and rounds the to integer values (use this for labeling in images)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.find_level.html#utils.find_level" title="utils.find_level"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_level</span></code></a>(arr, level[, x])</p></td>
+<td><p>Find the point where an array crosses a pre-defined level</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.calc_hist_1d_single.html#utils.calc_hist_1d_single" title="utils.calc_hist_1d_single"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_hist_1d_single</span></code></a>(data[, xrange, ...])</p></td>
+<td><p>Calculates a single 1d histogram of the <em>data</em> array in the range <em>xrange</em></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.calc_hist_2d_single.html#utils.calc_hist_2d_single" title="utils.calc_hist_2d_single"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_hist_2d_single</span></code></a>(x, y, xrange[, ...])</p></td>
+<td><p>Calculates a single 2d histogram from arrays <em>x</em> and <em>y</em> in the range <em>xrange</em></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.interpolate.html#utils.interpolate" title="utils.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interpolate</span></code></a>(ind1, ind2[, x, y, log_y])</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.align_trace.html#utils.align_trace" title="utils.align_trace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">align_trace</span></code></a>(x, y, xrange, align_value)</p></td>
+<td><p>Aligns traces based on the values of array <code class="xref py py-obj docutils literal notranslate"><span class="pre">y</span></code> at the value <code class="xref py py-obj docutils literal notranslate"><span class="pre">align_value</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.calc_covariance.html#utils.calc_covariance" title="utils.calc_covariance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_covariance</span></code></a>(x, y)</p></td>
+<td><p>Calculates the covariance of two selected quantities <span class="math notranslate nohighlight">\(\text{Cov}(x,y)=\left\langle(x-\left\langle x\right\rangle)\cdot(y-\left\langle y\right\rangle)\right\rangle\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.calc_correlation.html#utils.calc_correlation" title="utils.calc_correlation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_correlation</span></code></a>(x, y)</p></td>
+<td><p>Calculates the correlation of two selected quantities.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.largest_divisor.html#utils.largest_divisor" title="utils.largest_divisor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">largest_divisor</span></code></a>(num[, limit])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.custom_error.html#utils.custom_error" title="utils.custom_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_error</span></code></a>(arr, **kwargs)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="file-handling">
+<h2>File handling<a class="headerlink" href="#file-handling" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.collect_traces.html#utils.collect_traces" title="utils.collect_traces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_traces</span></code></a>(array_of_all, array_of_single)</p></td>
+<td><p>Add array to a pre-existing array collection by vertically stacking them (like when appending lists, because in numpy append function flattens the resulting array)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.load_block_to_list.html#utils.load_block_to_list" title="utils.load_block_to_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_block_to_list</span></code></a>(path_to_block[, ...])</p></td>
+<td><p>Loads a single block into a list of traces (used for older measurements, stored in binary files using .dat extension)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.read_waveform_params.html#utils.read_waveform_params" title="utils.read_waveform_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_waveform_params</span></code></a>(waveform_file, mode[, ...])</p></td>
+<td><p>Reads data from the waveform file used in the measurement</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.get_name_from_path.html#utils.get_name_from_path" title="utils.get_name_from_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_name_from_path</span></code></a>(file_path)</p></td>
+<td><p>Extracts filename from a given <a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Path</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.get_num_from_name.html#utils.get_num_from_name" title="utils.get_num_from_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_num_from_name</span></code></a>(trace_name)</p></td>
+<td><p>Extracts number from a string</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.choose_files.html#utils.choose_files" title="utils.choose_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">choose_files</span></code></a>(file_array, start_block[, ...])</p></td>
+<td><p>Select files with block numbers between <code class="xref py py-obj docutils literal notranslate"><span class="pre">start_block</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">end_block</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.choose_traces.html#utils.choose_traces" title="utils.choose_traces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">choose_traces</span></code></a>(trace_array, first[, last])</p></td>
+<td><p>Select traces with trace numbers between <code class="xref py py-obj docutils literal notranslate"><span class="pre">first</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">last</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.sort_by_trace_num.html#utils.sort_by_trace_num" title="utils.sort_by_trace_num"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sort_by_trace_num</span></code></a>(trace_names_array)</p></td>
+<td><p>Returns the array of trace names sorted by trace numbers instead of alphabetical order</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.load_scopedata.html#utils.load_scopedata" title="utils.load_scopedata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_scopedata</span></code></a>(file_name, home_dir)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="fit-functions">
+<h2>Fit Functions<a class="headerlink" href="#fit-functions" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.fit_func_lin.html#utils.fit_func_lin" title="utils.fit_func_lin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_func_lin</span></code></a>(x, a, b)</p></td>
+<td><p>Linear function for line fitting</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.gaussian_fun.html#utils.gaussian_fun" title="utils.gaussian_fun"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gaussian_fun</span></code></a>(x, a, b, c)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="miscellaneous">
+<h2>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.execute_and_measure_time.html#utils.execute_and_measure_time" title="utils.execute_and_measure_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">execute_and_measure_time</span></code></a>(function_name, ...)</p></td>
+<td><p>Executes function <code class="xref py py-obj docutils literal notranslate"><span class="pre">function_name</span></code> while measuring the time of execution.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.check_date.html#utils.check_date" title="utils.check_date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_date</span></code></a>(date)</p></td>
+<td><p>Check if a date is formatted right</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/utils.count_bool_groups.html#utils.count_bool_groups" title="utils.count_bool_groups"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count_bool_groups</span></code></a>(bool_arr)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/utils.even_ext.html#utils.even_ext" title="utils.even_ext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">even_ext</span></code></a>(arr, n)</p></td>
+<td><p>Extends array with n elements, by mirroring values adjacent to the edges</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">MCBJ STM-BJ</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="mcbj.html">Break Junction and Hold measurement analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pca_and_ml.html">Principal Component Analysis and PCA-based selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plots.html">Complex plot functions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Utility functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#converters">Converters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calculations">Calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#file-handling">File handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fit-functions">Fit Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#miscellaneous">Miscellaneous</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="plots.html" title="previous chapter">Complex plot functions</a></li>
+      <li>Next: <a href="api/utils.convert_g0_to_ohm.html" title="next chapter">utils.convert_g0_to_ohm</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Greta Mezei.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/reference/utils.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

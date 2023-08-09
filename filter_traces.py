@@ -3,21 +3,23 @@ import utils
 from scipy.signal import find_peaks
 
 
-def does_not_break(conductance):
+def does_not_break(conductance, min_val=1e-5):
     #     return np.all(conductance > 1e-5)  # very strict
     #     return np.sum(conductance > 1e-5) > 0.998*len(conductance)  # still more strict than previously used ones
-    return np.all(utils.moving_average(conductance, 50) > 1e-5)  # still more strict, but I choose this
+    return np.all(utils.moving_average(conductance, 50) > min_val)  # still more strict, but I choose this
 
 
-def does_not_break_array(hold_trace: HoldTrace):
+def does_not_break_array(hold_trace: HoldTrace, min_val=1e-5):
     return (np.all(list(map(
                 does_not_break, [hold_trace.hold_conductance_pull[
                                  hold_trace.bias_steps_ranges_pull[i][0]+50:hold_trace.bias_steps_ranges_pull[i][1]-50]
-                                 for i in np.where(hold_trace.bias_steps > 0)[0]]))),
+                                 for i in np.where(hold_trace.bias_steps > 0)[0]],
+                [min_val, ]*np.where(hold_trace.bias_steps > 0)[0].shape[0]))),
             np.all(list(map(
                 does_not_break, [hold_trace.hold_conductance_push[
                                  hold_trace.bias_steps_ranges_push[i][0]+50:hold_trace.bias_steps_ranges_push[i][1]-50]
-                                 for i in np.where(hold_trace.bias_steps > 0)[0]]))))
+                                 for i in np.where(hold_trace.bias_steps > 0)[0]],
+                [min_val, ]*np.where(hold_trace.bias_steps > 0)[0].shape[0]))))
 
 
 def check_plateau_length(trace_pair: TracePair, min_length: Union[int, Tuple[int, int]], **kwargs) -> Tuple[bool, bool]:

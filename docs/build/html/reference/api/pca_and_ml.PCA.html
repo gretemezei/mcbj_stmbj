@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pca_and_ml.PCA &#8212; MCBJ STM-BJ 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=e031e9a9"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="pca_and_ml.PCA.calc_principal_components" href="pca_and_ml.PCA.calc_principal_components.html" />
+    <link rel="prev" title="Principal Component Analysis and PCA-based selection" href="../pca_and_ml.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="pca-and-ml-pca">
+<h1>pca_and_ml.PCA<a class="headerlink" href="#pca-and-ml-pca" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pca_and_ml.PCA">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pca_and_ml.</span></span><span class="sig-name descname"><span class="pre">PCA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="mcbj.Histogram.html#mcbj.Histogram" title="mcbj.Histogram"><span class="pre">Histogram</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_of_pcs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_from</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_trace_hists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pca_and_ml.PCA" title="Permalink to this definition">¶</a></dt>
+<dd><p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="pca_and_ml.PCA.calc_principal_components.html#pca_and_ml.PCA.calc_principal_components" title="pca_and_ml.PCA.calc_principal_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_principal_components</span></code></a>([direction])</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pca_and_ml.PCA.plot_pcs.html#pca_and_ml.PCA.plot_pcs" title="pca_and_ml.PCA.plot_pcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_pcs</span></code></a>([dpi, ax])</p></td>
+<td><p>Plot the calculated principal components Parameters ---------- dpi ax</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pca_and_ml.PCA.project_to_pcs.html#pca_and_ml.PCA.project_to_pcs" title="pca_and_ml.PCA.project_to_pcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">project_to_pcs</span></code></a>()</p></td>
+<td><p>Projection to the selected principal component Returns -------</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pca_and_ml.PCA.select_percentage.html#pca_and_ml.PCA.select_percentage" title="pca_and_ml.PCA.select_percentage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_percentage</span></code></a>([percentage, calc_histograms])</p></td>
+<td><p>Select <code class="xref py py-obj docutils literal notranslate"><span class="pre">percentage</span></code> percent of traces from the left-most and right-most of the PCA histogram Parameters ---------- percentage : the amount of traces to select from each side, stored in group1 and group2, respectively</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pca_and_ml.PCA.select_percentage_slice.html#pca_and_ml.PCA.select_percentage_slice" title="pca_and_ml.PCA.select_percentage_slice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_percentage_slice</span></code></a>([percentage, ...])</p></td>
+<td><p>Select <code class="xref py py-obj docutils literal notranslate"><span class="pre">percentage</span></code> percent of traces from the given slice of the PCA histogram</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>calc_group_histograms</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>calc_pc_hist_all</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>calc_pc_hist_single</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>load_principal_components</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>plot_group_histograms_1d</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>plot_group_histograms_2d</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>plot_pc_hist</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>save_principal_components</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pca_and_ml.PCA.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="mcbj.Histogram.html#mcbj.Histogram" title="mcbj.Histogram"><span class="pre">Histogram</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_of_pcs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_from</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_trace_hists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pca_and_ml.PCA.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>hist</strong><span class="classifier">Histogram, st or Path</span></dt><dd><p>if Histogram: Histogram instance where the correlation is calculated
+if str or Path: path to load histogram from</p>
+</dd>
+<dt><strong>num_of_pcs</strong><span class="classifier">int, default: 5</span></dt><dd><p>number of principal components to calculate and analyze</p>
+</dd>
+<dt><strong>color_map</strong><span class="classifier">cycler, list of colors</span></dt><dd><p>colors to use for plot</p>
+</dd>
+<dt><strong>load_from</strong></dt><dd></dd>
+<dt><strong>load_trace_hists</strong></dt><dd></dd>
+<dt><strong>folder</strong><span class="classifier">str or Path</span></dt><dd><p>if hist is a str or Path, you need to provide the path to the folder containing the traces too</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pca_and_ml.PCA.__init__" title="pca_and_ml.PCA.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([hist, num_of_pcs, color_map, ...])</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pca_and_ml.PCA.calc_group_histograms.html#pca_and_ml.PCA.calc_group_histograms" title="pca_and_ml.PCA.calc_group_histograms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_group_histograms</span></code></a>([chosen_pc, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pca_and_ml.PCA.calc_pc_hist_all.html#pca_and_ml.PCA.calc_pc_hist_all" title="pca_and_ml.PCA.calc_pc_hist_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_pc_hist_all</span></code></a>([num_of_bins, hist_min, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pca_and_ml.PCA.calc_pc_hist_single.html#pca_and_ml.PCA.calc_pc_hist_single" title="pca_and_ml.PCA.calc_pc_hist_single"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_pc_hist_single</span></code></a>(pc_key[, num_of_bins, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pca_and_ml.PCA.calc_principal_components.html#pca_and_ml.PCA.calc_principal_components" title="pca_and_ml.PCA.calc_principal_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_principal_components</span></code></a>([direction])</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pca_and_ml.PCA.load_principal_components.html#pca_and_ml.PCA.load_principal_components" title="pca_and_ml.PCA.load_principal_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_principal_components</span></code></a>(fname[, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pca_and_ml.PCA.plot_group_histograms_1d.html#pca_and_ml.PCA.plot_group_histograms_1d" title="pca_and_ml.PCA.plot_group_histograms_1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_group_histograms_1d</span></code></a>([ylims, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pca_and_ml.PCA.plot_group_histograms_2d.html#pca_and_ml.PCA.plot_group_histograms_2d" title="pca_and_ml.PCA.plot_group_histograms_2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_group_histograms_2d</span></code></a>([dpi, vmax])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pca_and_ml.PCA.plot_pc_hist.html#pca_and_ml.PCA.plot_pc_hist" title="pca_and_ml.PCA.plot_pc_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_pc_hist</span></code></a>(pc_key[, plot_groups, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pca_and_ml.PCA.plot_pcs.html#pca_and_ml.PCA.plot_pcs" title="pca_and_ml.PCA.plot_pcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_pcs</span></code></a>([dpi, ax])</p></td>
+<td><p>Plot the calculated principal components Parameters ---------- dpi ax</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pca_and_ml.PCA.project_to_pcs.html#pca_and_ml.PCA.project_to_pcs" title="pca_and_ml.PCA.project_to_pcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">project_to_pcs</span></code></a>()</p></td>
+<td><p>Projection to the selected principal component Returns -------</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pca_and_ml.PCA.save_principal_components.html#pca_and_ml.PCA.save_principal_components" title="pca_and_ml.PCA.save_principal_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_principal_components</span></code></a>(fname[, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pca_and_ml.PCA.select_percentage.html#pca_and_ml.PCA.select_percentage" title="pca_and_ml.PCA.select_percentage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_percentage</span></code></a>([percentage, calc_histograms])</p></td>
+<td><p>Select <code class="xref py py-obj docutils literal notranslate"><span class="pre">percentage</span></code> percent of traces from the left-most and right-most of the PCA histogram Parameters ---------- percentage : the amount of traces to select from each side, stored in group1 and group2, respectively</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pca_and_ml.PCA.select_percentage_slice.html#pca_and_ml.PCA.select_percentage_slice" title="pca_and_ml.PCA.select_percentage_slice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_percentage_slice</span></code></a>([percentage, ...])</p></td>
+<td><p>Select <code class="xref py py-obj docutils literal notranslate"><span class="pre">percentage</span></code> percent of traces from the given slice of the PCA histogram</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">MCBJ STM-BJ</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../mcbj.html">Break Junction and Hold measurement analysis</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../pca_and_ml.html">Principal Component Analysis and PCA-based selection</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../pca_and_ml.html#principal-components">Principal Components</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../plots.html">Complex plot functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">Utility functions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../pca_and_ml.html">Principal Component Analysis and PCA-based selection</a><ul>
+      <li>Previous: <a href="../pca_and_ml.html" title="previous chapter">Principal Component Analysis and PCA-based selection</a></li>
+      <li>Next: <a href="pca_and_ml.PCA.calc_principal_components.html" title="next chapter">pca_and_ml.PCA.calc_principal_components</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Greta Mezei.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../../_sources/reference/api/pca_and_ml.PCA.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

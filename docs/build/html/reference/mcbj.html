@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Break Junction and Hold measurement analysis &#8212; MCBJ STM-BJ 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b3523f8e" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=e031e9a9"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="mcbj.TracePair" href="api/mcbj.TracePair.html" />
+    <link rel="prev" title="Welcome to MCBJ STM-BJ’s documentation!" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="break-junction-and-hold-measurement-analysis">
+<h1>Break Junction and Hold measurement analysis<a class="headerlink" href="#break-junction-and-hold-measurement-analysis" title="Permalink to this heading">¶</a></h1>
+<section id="break-junction-trace-pairs">
+<h2>Break Junction Trace Pairs<a class="headerlink" href="#break-junction-trace-pairs" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.TracePair.html#mcbj.TracePair" title="mcbj.TracePair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TracePair</span></code></a>(trace, load_from[, ...])</p></td>
+<td><p>Class to represent a break junction trace pair</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.TracePair.load_trace_pair.html#mcbj.TracePair.load_trace_pair" title="mcbj.TracePair.load_trace_pair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TracePair.load_trace_pair</span></code></a>(bj_file)</p></td>
+<td><p>Loads the pull-push trace pair defined by <code class="xref py py-obj docutils literal notranslate"><span class="pre">TracePair.trace_num</span></code> from <code class="xref py py-obj docutils literal notranslate"><span class="pre">TracePair.file_path</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.TracePair.calc_plateau_length.html#mcbj.TracePair.calc_plateau_length" title="mcbj.TracePair.calc_plateau_length"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TracePair.calc_plateau_length</span></code></a>([...])</p></td>
+<td><p>Calculates plateau length in the given range.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.TracePair.plot_trace_pair.html#mcbj.TracePair.plot_trace_pair" title="mcbj.TracePair.plot_trace_pair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TracePair.plot_trace_pair</span></code></a>([ax, x_val, ...])</p></td>
+<td><p>Plot the loaded pull-push trace pair</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="break-junction-histograms">
+<h2>Break Junction Histograms<a class="headerlink" href="#break-junction-histograms" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.Histogram.html#mcbj.Histogram" title="mcbj.Histogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram</span></code></a>(folder[, load_from, traces, ...])</p></td>
+<td><p>Class for statistical analysis of break junction traces</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.Histogram.calc_hist_1d.html#mcbj.Histogram.calc_hist_1d" title="mcbj.Histogram.calc_hist_1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram.calc_hist_1d</span></code></a>()</p></td>
+<td><p>Calculate 1d conductance histogram based on the parameters provided for the defined Histogram object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.Histogram.calc_hist_2d.html#mcbj.Histogram.calc_hist_2d" title="mcbj.Histogram.calc_hist_2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram.calc_hist_2d</span></code></a>(align_at[, ...])</p></td>
+<td><p>Calculate 2d conductance-displacement histogram for pull and push traces aligned at the conductance value <em>align_at</em> in the displacement range <em>range_pull</em> and <em>range_push</em>, respectively</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.Histogram.calc_plateau_length_hist.html#mcbj.Histogram.calc_plateau_length_hist" title="mcbj.Histogram.calc_plateau_length_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram.calc_plateau_length_hist</span></code></a>([xrange, ...])</p></td>
+<td><p>Calculate plateau length histograms</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.Histogram.calc_temporal_hist.html#mcbj.Histogram.calc_temporal_hist" title="mcbj.Histogram.calc_temporal_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram.calc_temporal_hist</span></code></a>()</p></td>
+<td><p>Calculate single conductance 1d histogram for each included trace, and collect them to create a temporal histogram of the break junction traces</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.Histogram.calc_stats.html#mcbj.Histogram.calc_stats" title="mcbj.Histogram.calc_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram.calc_stats</span></code></a>(align_at[, ...])</p></td>
+<td><p>Perform all statistical analysis in one iteration</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.Histogram.calc_corr_hist_2d.html#mcbj.Histogram.calc_corr_hist_2d" title="mcbj.Histogram.calc_corr_hist_2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram.calc_corr_hist_2d</span></code></a>()</p></td>
+<td><p>Calculate correlation matrix</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.Histogram.plot_example_traces.html#mcbj.Histogram.plot_example_traces" title="mcbj.Histogram.plot_example_traces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram.plot_example_traces</span></code></a>(traces, shift)</p></td>
+<td><p>Plot selected trace(s) <code class="xref py py-obj docutils literal notranslate"><span class="pre">traces</span></code> as example in one plot</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.Histogram.plot_hist_1d.html#mcbj.Histogram.plot_hist_1d" title="mcbj.Histogram.plot_hist_1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram.plot_hist_1d</span></code></a>([ax, direction, ...])</p></td>
+<td><p>Plot 1d conductance histogram, and add annotations</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.Histogram.plot_hist_2d_both.html#mcbj.Histogram.plot_hist_2d_both" title="mcbj.Histogram.plot_hist_2d_both"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram.plot_hist_2d_both</span></code></a>([dpi])</p></td>
+<td><p>Plot both pull and push 2d conductance-displacement histograms</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.Histogram.plot_hist_2d_one.html#mcbj.Histogram.plot_hist_2d_one" title="mcbj.Histogram.plot_hist_2d_one"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram.plot_hist_2d_one</span></code></a>([direction, ax, dpi])</p></td>
+<td><p>Plot 2d conductance-displacement histogram for 'pull' or 'push' traces defined by the <em>direction</em> parameter</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.Histogram.plot_plateau_length_hist.html#mcbj.Histogram.plot_plateau_length_hist" title="mcbj.Histogram.plot_plateau_length_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram.plot_plateau_length_hist</span></code></a>([ax, ...])</p></td>
+<td><p>Plot plateau length histograms</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.Histogram.plot_temporal_hist.html#mcbj.Histogram.plot_temporal_hist" title="mcbj.Histogram.plot_temporal_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram.plot_temporal_hist</span></code></a>([ax, ...])</p></td>
+<td><p>Plot temporal histograms</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.Histogram.plot_corr.html#mcbj.Histogram.plot_corr" title="mcbj.Histogram.plot_corr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram.plot_corr</span></code></a>([mode, dpi])</p></td>
+<td><p>Plot correlation histogram</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.Histogram.save_histogram.html#mcbj.Histogram.save_histogram" title="mcbj.Histogram.save_histogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram.save_histogram</span></code></a>(fname)</p></td>
+<td><p>Saves histogram to h5 file</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.Histogram.load_histogram.html#mcbj.Histogram.load_histogram" title="mcbj.Histogram.load_histogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Histogram.load_histogram</span></code></a>(fname)</p></td>
+<td><p>Load histogram from file <code class="xref py py-obj docutils literal notranslate"><span class="pre">fname</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="hold-trace-analysis">
+<h2>Hold Trace Analysis<a class="headerlink" href="#hold-trace-analysis" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.html#mcbj.HoldTrace" title="mcbj.HoldTrace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace</span></code></a>(trace, load_from[, bias_offset, ...])</p></td>
+<td><p>Class to represent a hold trace pair</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.load_hold_traces.html#mcbj.HoldTrace.load_hold_traces" title="mcbj.HoldTrace.load_hold_traces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.load_hold_traces</span></code></a>(hold_file)</p></td>
+<td><p>Load hold parameters to the corresponding attributes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.plot_hold_traces.html#mcbj.HoldTrace.plot_hold_traces" title="mcbj.HoldTrace.plot_hold_traces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.plot_hold_traces</span></code></a>([direction, ax, ...])</p></td>
+<td><p>Plot hold traces</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.analyse_hold_trace.html#mcbj.HoldTrace.analyse_hold_trace" title="mcbj.HoldTrace.analyse_hold_trace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.analyse_hold_trace</span></code></a>([num_of_fft, ...])</p></td>
+<td><p>Analysis of steps of a single trace</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.area_under_psds.html#mcbj.HoldTrace.area_under_psds" title="mcbj.HoldTrace.area_under_psds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.area_under_psds</span></code></a>(freq, psd_results)</p></td>
+<td><p>Calculate the areas under PSD curves in the given frequency range</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.area_under_single_psd.html#mcbj.HoldTrace.area_under_single_psd" title="mcbj.HoldTrace.area_under_single_psd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.area_under_single_psd</span></code></a>(freq, psd_result)</p></td>
+<td><p>Calculate the area under a PSD curve in the given frequency range (<em>start</em>, <em>end</em>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.calc_exponents4psds.html#mcbj.HoldTrace.calc_exponents4psds" title="mcbj.HoldTrace.calc_exponents4psds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.calc_exponents4psds</span></code></a>(freq, psds[, ...])</p></td>
+<td><p>Calculate exponents for each PSD</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.calc_noise_value.html#mcbj.HoldTrace.calc_noise_value" title="mcbj.HoldTrace.calc_noise_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.calc_noise_value</span></code></a>(areas, bias_steps)</p></td>
+<td><p>Calculate the noise value from area under each PSD</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.calculate_avg_value_on_step.html#mcbj.HoldTrace.calculate_avg_value_on_step" title="mcbj.HoldTrace.calculate_avg_value_on_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.calculate_avg_value_on_step</span></code></a>(...)</p></td>
+<td><p>Calculate avg values for each step in the ranges: <em>in_ranges</em></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.calculate_freq_resolution.html#mcbj.HoldTrace.calculate_freq_resolution" title="mcbj.HoldTrace.calculate_freq_resolution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.calculate_freq_resolution</span></code></a>()</p></td>
+<td><p>Calculates the frequency resolution from the length of the fft intervals</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.calculate_psds.html#mcbj.HoldTrace.calculate_psds" title="mcbj.HoldTrace.calculate_psds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.calculate_psds</span></code></a>(psd_intervals)</p></td>
+<td><p>Calculate the power spectral densities on each bias step</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.find_bias_steps.html#mcbj.HoldTrace.find_bias_steps" title="mcbj.HoldTrace.find_bias_steps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.find_bias_steps</span></code></a>(bias[, min_len, ...])</p></td>
+<td><p>Finds the range of each bias step in the measurement</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.find_max_fft_interval.html#mcbj.HoldTrace.find_max_fft_interval" title="mcbj.HoldTrace.find_max_fft_interval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.find_max_fft_interval</span></code></a>(min_step_length)</p></td>
+<td><p>Calculates the maximal possible length (in points) of a sub-range in a step, that is a power of two and so it is fit to perform fft calculations on</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.find_psd_intervals.html#mcbj.HoldTrace.find_psd_intervals" title="mcbj.HoldTrace.find_psd_intervals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.find_psd_intervals</span></code></a>(...)</p></td>
+<td><p>Find intervals for individual PSD calculations</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.find_signal_steps.html#mcbj.HoldTrace.find_signal_steps" title="mcbj.HoldTrace.find_signal_steps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.find_signal_steps</span></code></a>(measured_signal)</p></td>
+<td><p>Finds the point of each signal step in the measurement</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.fit_line_to_psd.html#mcbj.HoldTrace.fit_line_to_psd" title="mcbj.HoldTrace.fit_line_to_psd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.fit_line_to_psd</span></code></a>(freq, psd, fit_range)</p></td>
+<td><p>Fit a line to a single PSD and return the line parameters</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.is_long_enough.html#mcbj.HoldTrace.is_long_enough" title="mcbj.HoldTrace.is_long_enough"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.is_long_enough</span></code></a>(trace_array, min_length)</p></td>
+<td><p>Checks whether the length of a single trace exceeds a certain value <em>min_length</em></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.plot_psds.html#mcbj.HoldTrace.plot_psds" title="mcbj.HoldTrace.plot_psds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.plot_psds</span></code></a>([pull, color_list, ...])</p></td>
+<td><p>Plot calculated PSDs for each bias step with different color</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.remove_thermal_background_1d.html#mcbj.HoldTrace.remove_thermal_background_1d" title="mcbj.HoldTrace.remove_thermal_background_1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.remove_thermal_background_1d</span></code></a>(...)</p></td>
+<td><p>Remove thermal background from <em>some_array</em></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.HoldTrace.remove_thermal_background_2d.html#mcbj.HoldTrace.remove_thermal_background_2d" title="mcbj.HoldTrace.remove_thermal_background_2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HoldTrace.remove_thermal_background_2d</span></code></a>(...)</p></td>
+<td><p>Remove the thermal background by subtracting the first column from all other columns</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="noise-analysis">
+<h2>Noise Analysis<a class="headerlink" href="#noise-analysis" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.NoiseStats.html#mcbj.NoiseStats" title="mcbj.NoiseStats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoiseStats</span></code></a>(folder[, bias_offset, traces, ...])</p></td>
+<td><p>Class for noise analysis</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.NoiseStats.calc_stats.html#mcbj.NoiseStats.calc_stats" title="mcbj.NoiseStats.calc_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoiseStats.calc_stats</span></code></a>(bias_offset[, ...])</p></td>
+<td><p>Calculate all statistics for the chosen traces</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.NoiseStats.calc_stats_old.html#mcbj.NoiseStats.calc_stats_old" title="mcbj.NoiseStats.calc_stats_old"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoiseStats.calc_stats_old</span></code></a>(bias_offset[, ...])</p></td>
+<td><p>Calculate all statistics for the chosen traces</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.NoiseStats.plot_correlation.html#mcbj.NoiseStats.plot_correlation" title="mcbj.NoiseStats.plot_correlation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoiseStats.plot_correlation</span></code></a>(n, correlation)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.NoiseStats.plot_noise_power_2dhist.html#mcbj.NoiseStats.plot_noise_power_2dhist" title="mcbj.NoiseStats.plot_noise_power_2dhist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoiseStats.plot_noise_power_2dhist</span></code></a>(...[, ...])</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.NoiseStats.scat_and_hist.html#mcbj.NoiseStats.scat_and_hist" title="mcbj.NoiseStats.scat_and_hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoiseStats.scat_and_hist</span></code></a>(xlabel, ylabel[, ...])</p></td>
+<td><p>Plot scatterplots and histograms for each axis</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/mcbj.NoiseStats.scatterplot.html#mcbj.NoiseStats.scatterplot" title="mcbj.NoiseStats.scatterplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoiseStats.scatterplot</span></code></a>(x, y[, ax_xlabel, ...])</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/mcbj.NoiseStats.scatterplot_pull_push.html#mcbj.NoiseStats.scatterplot_pull_push" title="mcbj.NoiseStats.scatterplot_pull_push"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoiseStats.scatterplot_pull_push</span></code></a>(x_pull, ...)</p></td>
+<td><p>Scatterpllot of values x and y, for both directions in one plot</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">MCBJ STM-BJ</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Break Junction and Hold measurement analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#break-junction-trace-pairs">Break Junction Trace Pairs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#break-junction-histograms">Break Junction Histograms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hold-trace-analysis">Hold Trace Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#noise-analysis">Noise Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pca_and_ml.html">Principal Component Analysis and PCA-based selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plots.html">Complex plot functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utility functions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Welcome to MCBJ STM-BJ’s documentation!</a></li>
+      <li>Next: <a href="api/mcbj.TracePair.html" title="next chapter">mcbj.TracePair</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Greta Mezei.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/reference/mcbj.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

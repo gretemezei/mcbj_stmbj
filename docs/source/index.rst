@@ -12,6 +12,7 @@ Python package to analyze break junction measurements and corresponding hold mea
    :maxdepth: 2
    :caption: Contents:
 
+   reference/quickstart
    reference/mcbj
    reference/pca_and_ml
    reference/plots

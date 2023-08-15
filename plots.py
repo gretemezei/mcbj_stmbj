@@ -244,6 +244,7 @@ def plot_measurement_scheme_combed_both(trace_pair: TracePair, hold_trace: HoldT
                                         add_points: bool = False,
                                         fig_size: Tuple[float, float] = utils.cm2inch(16, 5),
                                         save_fig: bool = False,
+                                        time_text_pos: Optional[float] = None,
                                         to_axes: Optional[Tuple[matplotlib.axes.Axes,
                                                                 matplotlib.axes.Axes,
                                                                 matplotlib.axes.Axes,
@@ -277,6 +278,8 @@ def plot_measurement_scheme_combed_both(trace_pair: TracePair, hold_trace: HoldT
     save_fig : bool
         if True, the plotted figure is saved as 'measurement_scheme_combed_{trace_pair.trace_num}.png'
         in the results folder of the measurement
+    time_text_pos : Optional[float]
+        vertical position of the text Time [s]. Use this to set it if it's way off
     to_axes : Tuple(matplotlib.axes.Axes, matplotlib.axes.Axes)
     Returns
     -------
@@ -479,7 +482,12 @@ def plot_measurement_scheme_combed_both(trace_pair: TracePair, hold_trace: HoldT
     ax_piezo_push.set_xlim(time_total_push[0], time_total_push[-1])
 
     # ax_cond_pull.text(time_after_pull[-1], 1e-7, 'Time [s]', va='top', ha='center', size=8)
-    ax_piezo_pull.text(time_after_pull[-1], max(piezo_total_pull) + 1, 'Time [s]', va='bottom', ha='center',
+
+    if time_text_pos is None:
+        time_text_pos = ax_piezo_pull.get_ylim()[1] + 0.2 * (ax_piezo_pull.get_ylim()[1] - ax_piezo_pull.get_ylim()[0])
+
+    ax_piezo_pull.text(x=time_after_pull[-1], y=time_text_pos,
+                       s='Time [s]', va='bottom', ha='center',
                        size=rcParams['axes.labelsize'])
 
     if save_fig:

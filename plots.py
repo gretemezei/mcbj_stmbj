@@ -961,6 +961,8 @@ def plot_iv_with_details(hold_trace: HoldTrace, trace_pair: TracePair, direction
 
     fig.suptitle(f'Trace {trace_pair.trace_num}', fontsize=6)
 
+    return ax_trace, ax_hold, ax_iv, ax_noise_1, ax_noise_2, ax_psd
+
 
 def plot_correlation(n, correlation, axis=None, **kwargs):
     if axis is None:

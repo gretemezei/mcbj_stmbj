@@ -502,7 +502,7 @@ def plot_ivs_scheme_one(trace_pair: TracePair, hold_trace: HoldTrace,
                         main_colors: Tuple[str, str] = ('cornflowerblue', 'indianred'),
                         accent_colors: Tuple[str, str] = ('royalblue', 'firebrick'),
                         vline_color: str = 'grey',
-                        color_list: Optional[List] = None,
+                        color_list: Optional[Union[List, np.ndarray]] = None,
                         smoothing: int = 1,
                         iv_num_xticks: int = 5,
                         which_psds: Optional[List[int]] = None,
@@ -879,6 +879,87 @@ def plot_ivs_scheme(trace_pair: TracePair, hold_trace: HoldTrace,
     ax_psd_push = hold_trace.plot_psds(ax=ax_psd_push, pull=False, plot_legend=False)
 
     return ax_psd_pull, ax_psd_push
+
+
+def plot_iv_with_details(hold_trace: HoldTrace, trace_pair: TracePair, direction: str, smoothing: int = 1,
+                         cmap: str = 'inferno'):
+
+    """
+
+    Parameters
+    ----------
+    hold_trace : HoldTrace
+        loaded, analyzed HoldTrace instance
+    trace_pair : TracePair
+        loaded TracePair instance
+    direction : str
+        'pull' or 'push'
+    smoothing : int, Default: 1
+    cmap : str
+
+
+    Returns
+    -------
+
+    """
+
+    # Create array of colors for the plot
+    unique_colors = {np.unique(hold_trace.bias_steps)[0]: np.array([[0, 0, 0, 1]])}
+
+    selected_colors = colormaps[cmap](np.linspace(0.2, 1, np.unique(hold_trace.bias_steps)[1:].shape[0]))
+
+    for i, bias_val in enumerate(np.unique(hold_trace.bias_steps)[1:]):
+        unique_colors[bias_val] = selected_colors[i]
+
+    my_colors = np.vstack([unique_colors[bias_val] for bias_val in hold_trace.bias_steps])
+
+    # Plot figure
+    fig, ax_trace, ax_hold, par_hold, ax_iv, ax_psd = \
+        plot_ivs_scheme_one(trace_pair=trace_pair, hold_trace=hold_trace, direction=direction,
+                            color_list=my_colors, vline_color='white',
+                            smoothing=smoothing, which_psds=None)
+
+    ax_noise_1 = ax_iv.inset_axes(bounds=(0.05, 0.55, 0.4, 0.4))
+    ax_noise_2 = ax_iv.inset_axes(bounds=(0.55, 0.05, 0.4, 0.4))
+
+    for i in range(len(my_colors)):
+        ax_iv.plot(hold_trace.bias_steps[i], hold_trace.avg_current_on_step_push[i], marker='o', ls='',
+                   ms=2.5, markeredgecolor='k', markeredgewidth=0.2, c=my_colors[i])
+        ax_noise_1.plot(hold_trace.bias_steps[i], hold_trace.areas_push[i], marker='o', ls='', ms=2.5,
+                        markeredgecolor='k', markeredgewidth=0.2, c=my_colors[i])
+        ax_noise_2.plot(hold_trace.bias_steps[i], hold_trace.current_noise_push[i], marker='o', ls='', ms=2.5,
+                        markeredgecolor='k', markeredgewidth=0.2, c=my_colors[i])
+
+    ax_noise_1.set_xlabel('Bias [V]', fontsize=4)
+    ax_noise_2.set_xlabel('Bias [V]', fontsize=4)
+
+    ax_noise_1.set_ylabel(r'$\Delta I^2 [\mathrm{A}^2]$', fontsize=4)
+    ax_noise_2.set_ylabel(r'$\Delta I/I$', fontsize=4)
+
+    ax_noise_1.set_yscale('log')
+    ax_noise_2.set_yscale('log')
+
+    ax_noise_1.xaxis.set_ticks_position('both')
+    ax_noise_1.yaxis.tick_right()
+    ax_noise_1.yaxis.set_label_position('right')
+    ax_noise_1.yaxis.set_ticks_position('both')
+
+    ax_noise_2.xaxis.tick_top()
+    ax_noise_2.xaxis.set_label_position('top')
+    ax_noise_2.xaxis.set_ticks_position('both')
+    ax_noise_2.yaxis.set_ticks_position('both')
+
+    ax_noise_1.tick_params(axis='x', labelsize=4)
+    ax_noise_1.tick_params(axis='y', labelsize=4)
+    ax_noise_2.tick_params(axis='x', labelsize=4)
+    ax_noise_2.tick_params(axis='y', labelsize=4)
+
+    ax_noise_1.set_xscale('log')
+    ax_noise_2.set_xscale('log')
+
+    ax_hold.set_ylim(-1 * max(hold_trace.hold_current_push), max(hold_trace.hold_current_push))
+
+    fig.suptitle(f'Trace {trace_pair.trace_num}', fontsize=6)
 
 
 def plot_correlation(n, correlation, axis=None, **kwargs):

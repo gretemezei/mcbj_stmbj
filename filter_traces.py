@@ -2,24 +2,67 @@ from mcbj import *
 import utils
 from scipy.signal import find_peaks
 
-
-def does_not_break(conductance, min_val=1e-5):
-    #     return np.all(conductance > 1e-5)  # very strict
-    #     return np.sum(conductance > 1e-5) > 0.998*len(conductance)  # still more strict than previously used ones
-    return np.all(utils.moving_average(conductance, 50) > min_val)  # still more strict, but I choose this
+# FILTER CONDITION FUNCTIONS
 
 
-def does_not_break_array(hold_trace: HoldTrace, min_val=1e-5):
-    return (np.all(list(map(
-                does_not_break, [hold_trace.hold_conductance_pull[
-                                 hold_trace.bias_steps_ranges_pull[i][0]+50:hold_trace.bias_steps_ranges_pull[i][1]-50]
-                                 for i in np.where(hold_trace.bias_steps > 0)[0]],
-                [min_val, ]*np.where(hold_trace.bias_steps > 0)[0].shape[0]))),
-            np.all(list(map(
-                does_not_break, [hold_trace.hold_conductance_push[
-                                 hold_trace.bias_steps_ranges_push[i][0]+50:hold_trace.bias_steps_ranges_push[i][1]-50]
-                                 for i in np.where(hold_trace.bias_steps > 0)[0]],
-                [min_val, ]*np.where(hold_trace.bias_steps > 0)[0].shape[0]))))
+def filter_multiple_conditions(hold_trace: HoldTrace, filter_conditions: Tuple[callable, ...],
+                               filter_kwargs: Tuple[dict, ...]):
+    """
+    Combines the filter conditions in the tuple, also enter the relevant keyword arguments as dictionaries
+    as a separate tuple
+
+    Parameters:
+    -----------
+    hold_trace : `~HoldTrace` instance
+        loaded and analysed hold trace
+    filter_conditions : Tuple[callable, ...]
+        multiple functions to filter the traces, each has to have the format that it returns two boolean values,
+        the 1st indicates whether the pull trace met the filter condition
+        2nd indicates whether the push trace met the given filter condition
+    filter_kwargs : Tuple[dict, ...]
+        keyword arguments for the filter conditions,
+        each dictionary contains the keyword arguments for the filter condition at the same index in `filter_conditions`
+        if a function does not require keyword arguments, enter an empty dictionary (`{}`) in its place
+
+    Returns:
+    --------
+    pull_result : bool
+        whether the pull trace met all conditions (AND)
+    push_result : bool
+        whether the push trace met all conditions (AND)
+    """
+
+    if len(filter_conditions) != len(filter_kwargs):
+        raise ValueError("the number of filter conditions (the number of elements in `filter_conditions`) has"
+                         "to be the same as the number of dictionaries containing the keyword arguments for each"
+                         "function. If a function does not require keyword arguments, enter an empty dictionary (`{}`)."
+                         "See documentation.")
+
+    pull_result, push_result = (True, True)
+
+    for filter_condition, filter_kwarg in zip(filter_conditions, filter_kwargs):
+        if pull_result or push_result:
+            pull_temp, push_temp = filter_condition(hold_trace, **filter_kwarg)
+
+            pull_result = pull_result and pull_temp
+            push_result = push_result and push_temp
+        else:
+            continue
+
+    return pull_result, push_result
+
+
+# for BJ traces
+
+
+def filter_trace_broke(trace_pair: TracePair, smaller_than = 1e-5):
+    pull, push = (False, False)
+    if any(trace_pair.conductance_pull < smaller_than):
+        pull = True
+    if any(trace_pair.conductance_push < smaller_than):
+        push = True
+
+    return pull, push
 
 
 def check_plateau_length(trace_pair: TracePair, min_length: Union[int, Tuple[int, int]], **kwargs) -> Tuple[bool, bool]:
@@ -63,6 +106,28 @@ def check_plateau_length(trace_pair: TracePair, min_length: Union[int, Tuple[int
             push = True
 
     return pull, push
+
+
+# for HOLD traces
+
+
+def does_not_break(conductance, min_val=1e-5):
+    #     return np.all(conductance > 1e-5)  # very strict
+    #     return np.sum(conductance > 1e-5) > 0.998*len(conductance)  # still more strict than previously used ones
+    return np.all(utils.moving_average(conductance, 50) > min_val)  # still more strict, but I choose this
+
+
+def does_not_break_array(hold_trace: HoldTrace, min_val=1e-5):
+    return (np.all(list(map(
+                does_not_break, [hold_trace.hold_conductance_pull[
+                                 hold_trace.bias_steps_ranges_pull[i][0]+50:hold_trace.bias_steps_ranges_pull[i][1]-50]
+                                 for i in np.where(hold_trace.bias_steps > 0)[0]],
+                [min_val, ]*np.where(hold_trace.bias_steps > 0)[0].shape[0]))),
+            np.all(list(map(
+                does_not_break, [hold_trace.hold_conductance_push[
+                                 hold_trace.bias_steps_ranges_push[i][0]+50:hold_trace.bias_steps_ranges_push[i][1]-50]
+                                 for i in np.where(hold_trace.bias_steps > 0)[0]],
+                [min_val, ]*np.where(hold_trace.bias_steps > 0)[0].shape[0]))))
 
 
 def conductances_close(hold_trace: HoldTrace, max_ratio: float, plateaus: Optional[Tuple[int, ...]] = None):

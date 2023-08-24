@@ -922,12 +922,27 @@ def plot_iv_with_details(hold_trace: HoldTrace, trace_pair: TracePair, direction
     ax_noise_1 = ax_iv.inset_axes(bounds=(0.05, 0.55, 0.4, 0.4))
     ax_noise_2 = ax_iv.inset_axes(bounds=(0.55, 0.05, 0.4, 0.4))
 
+    if direction == 'pull':
+        bias_steps = hold_trace.bias_steps
+        avg_current_on_step = hold_trace.avg_current_on_step_pull
+        areas = hold_trace.areas_pull
+        current_noise = hold_trace.current_noise_pull
+        hold_current = hold_trace.hold_current_pull
+    elif direction == 'push':
+        bias_steps = hold_trace.bias_steps
+        avg_current_on_step = hold_trace.avg_current_on_step_push
+        areas = hold_trace.areas_push
+        current_noise = hold_trace.current_noise_push
+        hold_current = hold_trace.hold_current_push
+    else:
+        raise(ValueError("Valid direction 'pull' or 'push'"))
+
     for i in range(len(my_colors)):
-        ax_iv.plot(hold_trace.bias_steps[i], hold_trace.avg_current_on_step_push[i], marker='o', ls='',
+        ax_iv.plot(bias_steps[i], avg_current_on_step[i], marker='o', ls='',
                    ms=2.5, markeredgecolor='k', markeredgewidth=0.2, c=my_colors[i])
-        ax_noise_1.plot(hold_trace.bias_steps[i], hold_trace.areas_push[i], marker='o', ls='', ms=2.5,
+        ax_noise_1.plot(bias_steps[i], areas[i], marker='o', ls='', ms=2.5,
                         markeredgecolor='k', markeredgewidth=0.2, c=my_colors[i])
-        ax_noise_2.plot(hold_trace.bias_steps[i], hold_trace.current_noise_push[i], marker='o', ls='', ms=2.5,
+        ax_noise_2.plot(bias_steps[i], current_noise[i], marker='o', ls='', ms=2.5,
                         markeredgecolor='k', markeredgewidth=0.2, c=my_colors[i])
 
     ax_noise_1.set_xlabel('Bias [V]', fontsize=4)
@@ -957,7 +972,7 @@ def plot_iv_with_details(hold_trace: HoldTrace, trace_pair: TracePair, direction
     ax_noise_1.set_xscale('log')
     ax_noise_2.set_xscale('log')
 
-    ax_hold.set_ylim(-1 * max(hold_trace.hold_current_push), max(hold_trace.hold_current_push))
+    ax_hold.set_ylim(-1 * max(hold_current), max(hold_current))
 
     fig.suptitle(f'Trace {trace_pair.trace_num}', fontsize=6)
 

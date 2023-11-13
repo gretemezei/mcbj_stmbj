@@ -1180,8 +1180,161 @@ def plot_noise_power(N: np.ndarray, corr: np.ndarray,
     return ax_corr, ax_corrhist_1, ax_corrhist_2
 
 
-def scatter_plots_from_source(source: pd.DataFrame, x: Union[str, Tuple[str, ...]], y = Union[str, Tuple[str, ...]]):
-    ...
+def scatter_from_source(df: pd.DataFrame, x: str, y: str, ax: Optional = None, log_scale: bool = False, **kwargs):
+    if ax is None:
+        fig, ax = plt.subplots(1, figsize=utils.cm2inch((5, 5)), dpi=200)
+        ax.tick_params(which='both', left=True, right=True, top=True, bottom=True, labelleft=True, labelright=False,
+                       labeltop=False, labelbottom=True)
+
+    ax.scatter(df[x], df[y], s=2, edgecolor='None', **kwargs)
+    if log_scale:
+        ax.set_xscale('log')
+        ax.set_yscale('log')
+    return ax
+
+
+def heatmap_from_source(df: pd.DataFrame, x: str, y: str,
+                        ax: Optional = None, log_scale: bool = False, num_bins: Tuple[int, int] = (100, 100),
+                        xrange: Optional = None, yrange: Optional = None, **kwargs):
+    if ax is None:
+        fig, ax = plt.subplots(1, figsize=utils.cm2inch(5, 5), dpi=200)
+        ax.tick_params(which='both', left=True, right=True, top=True, bottom=True, labelleft=True, labelright=False,
+                       labeltop=False, labelbottom=True)
+        ax.set_xlabel(x)
+        ax.set_ylabel(y)
+
+    if xrange is None:
+        xrange = (min(df[x]), max(df[x]))
+    if yrange is None:
+        yrange = (min(df[y]), max(df[y]))
+
+    xbins = np.logspace(np.log10(xrange[0]), np.log10(xrange[1]), num=num_bins[0])
+    ybins = np.logspace(np.log10(yrange[0]), np.log10(yrange[1]), num=num_bins[1])
+
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+
+    h, xedges, yedges = np.histogram2d(df[x], df[y], bins=[xbins, ybins])
+    x_mesh, y_mesh = np.meshgrid(xedges, yedges)
+
+    h = h.T  # need to take the transpose of h
+
+    im = ax.pcolormesh(x_mesh, y_mesh, h, cmap=utils.cmap_geo32, **kwargs)
+
+    ax_cbar = ax.inset_axes(bounds=(0.1, 0.9, 0.5, 0.05))
+    plt.colorbar(im, cax=ax_cbar, orientation='horizontal')
+
+    return ax
+
+
+def scatter_hist_from_source(df: pd.DataFrame, x: str, y: str, **kwargs):
+    fig = plt.figure(figsize=(4, 4), dpi=200)
+    gs = plt.GridSpec(2, 2, figure=fig,
+                      left=0.1, right=0.9, top=0.9, bottom=0.1, height_ratios=(1, 2), width_ratios=(2, 1),
+                      hspace=0, wspace=0)
+    ax_hist1 = fig.add_subplot(gs[0, 0])
+    ax_hist2 = fig.add_subplot(gs[1, 1])
+    ax_scat = fig.add_subplot(gs[1, 0])
+
+    if 'c' in kwargs.keys():
+        plot_color = kwargs['c']
+
+    ax_scat = scatter_from_source(df=df, x=x, y=y, log_scale=True, ax=ax_scat, **kwargs)
+    xbins1, hist1 = utils.calc_hist_1d_single(data=df[x], xrange=ax_scat.get_xlim(),
+                                              xbins_num=100, log_scale=True, bin_mode='total')
+    xbins2, hist2 = utils.calc_hist_1d_single(data=df[y], xrange=ax_scat.get_ylim(),
+                                              xbins_num=100, log_scale=True, bin_mode='total')
+
+    print(sum(hist1))
+    print(sum(hist2))
+
+    ax_hist1.plot(xbins1, hist1, c=plot_color)
+    ax_hist2.plot(hist2, xbins2, c=plot_color)
+
+    ax_hist1.set_xscale(ax_scat.get_xscale())
+    ax_hist2.set_yscale(ax_scat.get_yscale())
+    ax_hist1.set_xlim(ax_scat.get_xlim())
+    ax_hist2.set_ylim(ax_scat.get_ylim())
+
+    ax_hist1.set_xlabel(x)
+    ax_hist1.xaxis.set_label_position('top')
+    ax_hist2.set_ylabel(y, rotation=270, labelpad=6)
+    ax_hist2.yaxis.set_label_position('right')
+    ax_scat.set_xlabel(x)
+    ax_scat.set_ylabel(y)
+
+    ax_scat.tick_params(which='both', left=True, right=True, top=True, bottom=True, labelleft=True, labelright=False,
+                        labeltop=False, labelbottom=True)
+    ax_hist1.tick_params(which='both', left=True, right=True, top=True, bottom=True, labelleft=True, labelright=True,
+                         labeltop=True, labelbottom=False)
+    ax_hist2.tick_params(which='both', left=True, right=True, top=True, bottom=True, labelleft=False, labelright=True,
+                         labeltop=True, labelbottom=True)
+
+    return ax_scat, ax_hist1, ax_hist2
+
+
+def heatmap_hist_from_source(df: pd.DataFrame, x: str, y: str,
+                             xrange: Optional = None, yrange: Optional = None, num_bins: Tuple[int, int] = (100, 100),
+                             **kwargs):
+    fig = plt.figure(figsize=(4, 4), dpi=200)
+    gs = plt.GridSpec(2, 2, figure=fig,
+                      left=0.1, right=0.9, top=0.9, bottom=0.1, height_ratios=(1, 2), width_ratios=(2, 1),
+                      hspace=0, wspace=0)
+    ax_hist1 = fig.add_subplot(gs[0, 0])
+    ax_hist2 = fig.add_subplot(gs[1, 1])
+    ax_scat = fig.add_subplot(gs[1, 0])
+
+    if 'c' in kwargs.keys():
+        plot_color = kwargs['c']
+        kwargs.pop('c')
+
+    if xrange is None:
+        xrange = (min(df[x]), max(df[x]))
+    if yrange is None:
+        yrange = (min(df[y]), max(df[y]))
+
+    xbins = np.logspace(np.log10(xrange[0]), np.log10(xrange[1]), num=num_bins[0])
+    ybins = np.logspace(np.log10(yrange[0]), np.log10(yrange[1]), num=num_bins[1])
+
+    h, xedges, yedges = np.histogram2d(df[x], df[y], bins=[xbins, ybins])
+    x_mesh, y_mesh = np.meshgrid(xedges, yedges)
+
+    h = h.T  # need to take the transpose of h
+
+    im = ax_scat.pcolormesh(x_mesh, y_mesh, h, cmap=utils.cmap_geo32, **kwargs)
+    xbins1, hist1 = utils.calc_hist_1d_single(data=df[x], xrange=ax_scat.get_xlim(),
+                                              xbins_num=100, log_scale=True, bin_mode='total')
+    xbins2, hist2 = utils.calc_hist_1d_single(data=df[y], xrange=ax_scat.get_ylim(),
+                                              xbins_num=100, log_scale=True, bin_mode='total')
+
+    ax_hist1.plot(xbins1, hist1)
+    ax_hist2.plot(hist2, xbins2)
+
+    ax_scat.set_xscale('log')
+    ax_scat.set_yscale('log')
+    ax_hist1.set_xscale(ax_scat.get_xscale())
+    ax_hist2.set_yscale(ax_scat.get_yscale())
+    ax_hist1.set_xlim(ax_scat.get_xlim())
+    ax_hist2.set_ylim(ax_scat.get_ylim())
+
+    ax_hist1.set_xlabel(x)
+    ax_hist1.xaxis.set_label_position('top')
+    ax_hist2.set_ylabel(y, rotation=270, labelpad=6)
+    ax_hist2.yaxis.set_label_position('right')
+    ax_scat.set_xlabel(x)
+    ax_scat.set_ylabel(y)
+
+    ax_scat.tick_params(which='both', left=True, right=True, top=True, bottom=True, labelleft=True, labelright=False,
+                        labeltop=False, labelbottom=True)
+    ax_hist1.tick_params(which='both', left=True, right=True, top=True, bottom=True, labelleft=True, labelright=True,
+                         labeltop=True, labelbottom=False)
+    ax_hist2.tick_params(which='both', left=True, right=True, top=True, bottom=True, labelleft=False, labelright=True,
+                         labeltop=True, labelbottom=True)
+
+    ax_cbar = ax_scat.inset_axes(bounds=(0.1, 0.9, 0.5, 0.05))
+    plt.colorbar(im, cax=ax_cbar, orientation='horizontal')
+
+    return ax_scat, ax_hist1, ax_hist2
 
 
 # def scatter_plots(x: np.ndarray, y: Union[np.ndarray, List[np.ndarray]], output: Path,

@@ -1,0 +1,7 @@
+Szia Bence!
+
+Ha ezt látod, kérlek ne ezt a jupytert használd, hanem egy másik ablakban megtalálod a te fájljaidat és a dokumentációt is.
+
+Ugynaitt, bocsi a múltkori hibáért, az miattam volt, félbehagytam egy függvényt és ezért kaptatok syntax errort. Ezt azóta kijavítottam. Ha kérdésed van, írj nekem teams-en nyugodtan, akkor is, ha nem vagyok elérhető, és amint tudok válaszolok.
+
+Köszi, Gréta

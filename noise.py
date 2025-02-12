@@ -13,7 +13,8 @@ import utils
 
 def temporal_noise_single_trace(trace_pair: TracePair, align_at, interpolate,
                                 win_size=256, step_size=None, skip_points=50, end_point=3000,
-                                tolerance=2, filter_method='start-end', freq_range=(2000, 5000)):
+                                tolerance=2, filter_method='start-end', freq_range=(2000, 5000),
+                                return_window: bool = False):
     trace_pair.align_trace(align_at=align_at, interpolate=interpolate)
 
     if step_size is None:
@@ -26,6 +27,7 @@ def temporal_noise_single_trace(trace_pair: TracePair, align_at, interpolate,
         psd_intervals = []
         avg_conductance_in_win = []
         areas = []
+        conductance_windows = []
 
         if filter_method == 'start-end':
             def condition_check(arr):
@@ -51,6 +53,7 @@ def temporal_noise_single_trace(trace_pair: TracePair, align_at, interpolate,
 
         for i in range((len(conductance[skip_points:end_point]) - win_size) // step_size):
             conductance_in_win = conductance[skip_points + i * step_size: skip_points + i * step_size + win_size]
+            conductance_windows.append((skip_points + i * step_size, skip_points + i * step_size + win_size))
 
             if condition_check(conductance_in_win):
                 psd_intervals.append(conductance_in_win)
@@ -70,7 +73,9 @@ def temporal_noise_single_trace(trace_pair: TracePair, align_at, interpolate,
                 areas.append(scipy.integrate.trapz(psd_result[freq_mask], x=fft_freqs[freq_mask]))
             else:
                 areas.append((-1) * 1e-10)
-
+        if return_window:
+            return conductance, piezo, psd_intervals, psd_results, fft_freqs, avg_conductance_in_win, areas, \
+                   conductance_windows
         return conductance, piezo, psd_intervals, psd_results, fft_freqs, avg_conductance_in_win, areas
     else:
         raise utils.MyException(f'Cut conductance interval of trace not long enough. Cut length: {len(conductance)}, '

@@ -6,6 +6,7 @@ import re
 import math
 from typing import Union, Tuple, List, Optional
 from matplotlib.colors import ListedColormap
+from matplotlib import colormaps
 
 cmap_geo32 = ListedColormap(np.array([[255 / 255, 255 / 255, 255 / 255, 0],
                                       [255 / 255, 235 / 255, 235 / 255, 1],
@@ -42,6 +43,12 @@ cmap_geo32 = ListedColormap(np.array([[255 / 255, 255 / 255, 255 / 255, 0],
 
 blues = ['#000c33', '#002599', '#0032cc', '#003eff', '#406eff', '#809fff']  # blues
 reds = ['#330000', '#660000', '#990000', '#cc0000', '#ff0000', '#ff4040']  # reds
+
+
+def make_colormap_with_transparent_bg(num_of_colors: int, mpl_cmap='viridis'):
+
+    return ListedColormap(np.vstack((np.array([1., 1., 1., 0.]).reshape(1, -1),
+                                     colormaps[mpl_cmap](np.linspace(0.0, 1.0, num_of_colors)))))
 
 
 class MyException(Exception):
@@ -918,6 +925,33 @@ def calc_hist_2d_single(x: np.ndarray, y: np.ndarray,
     return x_mesh, y_mesh, h.T
 
 
+def calc_bins(middle: np.ndarray, log_scale=True):
+    """
+    Calculate bins for histograms, so that the middle point of each bin is at the elements of `middle`
+    Parameters
+    ----------
+    middle : np.ndarray, shape: (n,)
+        middle points of the bins
+    log_scale : bool
+        whether the bins should be on logarithmic scale
+    Returns
+    -------
+        np.ndarray, shape: (n+1,)
+    """
+    if log_scale:
+        bin_width = np.mean(np.diff(np.log10(middle)))
+        return np.append(10 ** (np.log10(middle) - bin_width / 2), 10 ** (np.log10(middle[-1]) + bin_width / 2))
+    else:
+        bin_width = np.mean(np.diff(middle))
+        return np.append(middle - bin_width / 2, middle[-1] + bin_width / 2)
+
+
+def calc_hist_2d_by_bins(x: np.ndarray, y: np.ndarray, xbins: np.ndarray, ybins: np.ndarray):
+    h, xedges, yedges = np.histogram2d(x, y, bins=[xbins, ybins])
+    x_mesh, y_mesh = np.meshgrid(xedges, yedges)
+
+    return x_mesh, y_mesh, h.T
+
 def interpolate(ind1: Tuple[float, float],
                 ind2: Tuple[float, float],
                 x: Optional[float] = None,
@@ -1178,3 +1212,23 @@ def custom_error(arr: np.ndarray, **kwargs) -> np.ndarray:
     # arr */ 10**sqrt(avg(abs(log(arr)-avg(log(arr)))**2)
 
     return 10**np.sqrt(np.mean(abs(np.log10(arr) - np.mean(np.log10(arr), **kwargs)) ** 2, **kwargs))
+
+
+def calc_sq_diff(y1, y2, log_scale=True):
+    """
+    Calculates the squared difference between arrays `y1` and `y2`
+    Parameters
+    ----------
+    y1 : np.ndarray
+    y2 : np.ndarray
+    log_scale : bool, default: True
+
+    Returns
+    -------
+    Sum of the squared differences of the elements, float
+    """
+    if log_scale:
+        y1 = np.log10(y1)
+        y2 = np.log10(y2)
+
+    return np.sum((y1 - y2) ** 2)

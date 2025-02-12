@@ -9,8 +9,65 @@ import re
 from typing import Union, Tuple, List, Optional
 from tqdm import tqdm
 
-from mcbj import TracePair, HoldTrace
+from mcbj import TracePair, Histogram, HoldTrace
 import utils
+
+
+def hist_1d_demo(hist: Histogram, traces: Union[int, list, np.array, Tuple[int, ...]], how='random', shift=1,
+                 figsize=utils.cm2inch(7, 4), dpi=200):
+    if isinstance(traces, int):
+        if how == 'random':
+            traces = np.random.choice(hist.traces, traces)
+        elif how == 'equal':
+            tot_num = hist.traces.shape[0]
+            traces = np.linspace(0, tot_num - 1, 10, endpoint=True, dtype=int)
+        print(f'Plotted traces: {traces}')
+
+    # load each tracepair
+    trace_pairs_loaded = [TracePair(i, load_from=hist.folder) for i in traces]
+    # align each tarce at 0.5 G0
+    for i in range(len(trace_pairs_loaded)):
+        trace_pairs_loaded[i].align_trace(align_at=0.5)
+
+    fig = plt.figure(figsize=figsize, dpi=dpi)
+    gs = plt.GridSpec(1, 3, figure=fig,
+                      left=0.1, right=0.9, top=0.9, bottom=0.1, width_ratios=(3, 2, 2),
+                      hspace=0, wspace=0)
+    ax_traces = fig.add_subplot(gs[0])
+    ax_singles = fig.add_subplot(gs[1])
+    ax_hist = fig.add_subplot(gs[2])
+
+    ax_hist.yaxis.tick_right()
+    ax_hist.yaxis.set_label_position('right')
+
+    for ax in (ax_traces, ax_singles, ax_hist):
+        ax.set_yscale('log')
+        ax.set_ylim(10**np.round(min(np.log10(hist.hist_1d_bins))),
+                    10**np.round(max(np.log10(hist.hist_1d_bins))))
+
+    ax_traces.tick_params(which='both', left=True, right=True, top=True, bottom=True, labelleft=True, labelright=False,
+                          labeltop=False, labelbottom=True)
+
+    ax_singles.tick_params(which='both', left=True, right=True, top=True, bottom=True, labelleft=False,
+                           labelright=False,
+                           labeltop=False, labelbottom=True)
+
+    ax_hist.tick_params(which='both', left=True, right=True, top=True, bottom=True, labelleft=False, labelright=True,
+                        labeltop=False, labelbottom=True)
+
+    for i, trace in enumerate(traces):
+        ax_traces.plot(trace_pairs_loaded[i].aligned_piezo_pull + i * shift, trace_pairs_loaded[i].conductance_pull,
+                       lw=0.5)
+        ax_singles.barh(hist.hist_1d_bins[:-1],
+                        width=hist.temporal_hist_pull[np.where(hist.traces == trace)[0][0]][:-1] / hist.traces.shape[0],
+                        height=np.diff(hist.hist_1d_bins), alpha=0.6)
+
+    ax_hist.fill_betweenx(hist.hist_1d_bins, hist.hist_1d_pull)
+    ax_hist.set_xlim(0, 500)
+
+    ax_traces.set_xlim(-1)
+
+    return ax_traces, ax_singles, ax_hist
 
 
 def plot_measurement_scheme(trace_pair: TracePair, hold_trace: HoldTrace, home_folder: Path,

@@ -163,7 +163,7 @@ class TracePair:
                  low_bound_pull: float = 0.5, high_bound_pull: float = 1.5,
                  low_bound_push: float = 0.5, high_bound_push: float = 1.5) -> None:
 
-        if isinstance(trace, (int, np.int32)):
+        if isinstance(trace, (int, np.int32, np.int64)):
             self.trace_num = trace
             self.trace_name = f'trace_{self.trace_num}'
         elif isinstance(trace, str):
@@ -1584,7 +1584,7 @@ class Histogram:
             raise ValueError(f'Unknown parameter for direction: {direction}. Valid choices include: ["pull", "push"]')
 
         ax.set_ylabel(r'Conductance $[G_{0}]$')
-        ax.set_xlabel(r'Piezo $[V]$')
+        ax.set_xlabel(r'Piezo [V]')
 
         ax.xaxis.set_ticks_position('both')
         ax.yaxis.set_ticks_position('both')
@@ -2032,7 +2032,7 @@ class Histogram:
                     y=trace_pair.conductance_pull,
                     xrange=range_pull,
                     log_scale_x=False,
-                    yrange=(1e-6, 10),
+                    yrange=self.conductance_range,
                     log_scale_y=True,
                     num_bins=(xbins_pull, self.conductance_bins_num),
                     bin_mode_y=self.conductance_bins_mode)
@@ -2053,7 +2053,7 @@ class Histogram:
                     y=trace_pair.conductance_push[::-1],
                     xrange=range_push,
                     log_scale_x=False,
-                    yrange=(1e-6, 10),
+                    yrange=self.conductance_range,
                     log_scale_y=True,
                     num_bins=(xbins_push, self.conductance_bins_num),
                     bin_mode_y=self.conductance_bins_mode)
@@ -2733,6 +2733,8 @@ class HoldTrace:
             fig, ax = plt.subplots(1, figsize=utils.cm2inch(10, 6), dpi=dpi)  # width, height
 
         par = ax.twinx()
+        ax.set_zorder(par.get_zorder() + 1)
+        ax.patch.set_visible(False)
 
         if direction == 'pull':
             pull = True
@@ -2756,7 +2758,7 @@ class HoldTrace:
                                                        smoothing)
 
             par.plot(self.time_axis_pull, utils.moving_average(self.hold_bias_pull, smoothing),
-                     c=ax_colors[1], lw=0.5, zorder=0)
+                     c=ax_colors[1], lw=0.5)
             par.set_ylabel('Bias [mV]')
 
             ax.plot(self.time_axis_pull, data, c=ax_colors[0], lw=0.5, zorder=10)
@@ -4524,3 +4526,32 @@ class NoiseStats:
         im = ax.pcolormesh(x_mesh, y_mesh, h.T, cmap=utils.cmap_geo32)
 
         return ax
+
+
+def calc_noise_sim(sim_data_df, dgap=0.0, dphi=0.0, verbose=False):
+    """
+    Calculates noise from simulation data (calculated in matlab, using Laci's code and loaded to sim_data_df).
+    You can select which parameter you want to be fluctuating and set the other to zero.
+    If both values are nonzero, both parameters fluctuate.
+
+    Parameters
+    ----------
+    sim_data_df: `pd.DataFrame` containing data from Laci's simulation software. (best fit parameters)
+    dgap: float, gap fluctuation in nm, default: 0.0
+    dphi: float, barrier fluctuation in eV, default: 0.0
+
+    Returns
+    -------
+    calculated relative noise (dG/G) with the given fluctuating variables (dgap, dphi).
+    """
+
+    if verbose:
+        print(
+            f"Calculating relative noise when the barrier fluctuation is dphi={dphi} eV "
+            f"and the gap fluctuation is dgap={dgap} nm.")
+
+    # multiply by 1e-9 so the unit is nanometer
+    # multiply by 1.6e-19 (unit charge) so the unit is eV
+
+    return (np.sqrt((sim_data_df['dR/dz'] * dgap * 1e-9) ** 2 + (sim_data_df['dR/dPhi'] * dphi * 1.6e-19) ** 2) /
+            sim_data_df['R [Ohm]']).to_numpy()
